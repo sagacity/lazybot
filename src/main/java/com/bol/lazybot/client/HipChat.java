@@ -1,4 +1,4 @@
-package com.bol.team5f.lazybot.api;
+package com.bol.lazybot.client;
 
 import feign.Headers;
 import feign.Param;

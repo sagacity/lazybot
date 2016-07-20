@@ -35,28 +35,13 @@
             <version>4.1.0</version>
         </dependency>
         <dependency>
-            <groupId>org.igniterealtime.smack</groupId>
-            <artifactId>smack-tcp</artifactId>
-            <version>4.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.igniterealtime.smack</groupId>
-            <artifactId>smack-im</artifactId>
-            <version>4.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.igniterealtime.smack</groupId>
-            <artifactId>smack-extensions</artifactId>
-            <version>4.1.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.netflix.feign</groupId>
             <artifactId>feign-core</artifactId>
             <version>8.16.2</version>
         </dependency>
         <dependency>
             <groupId>com.netflix.feign</groupId>
-            <artifactId>feign-gson</artifactId>
+            <artifactId>feign-jackson</artifactId>
             <version>8.16.2</version>
         </dependency>
         <dependency>
@@ -65,14 +50,24 @@
             <version>8.16.2</version>
         </dependency>
         <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.10</version>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>4.1.0</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
+            <groupId>io.ratpack</groupId>
+            <artifactId>ratpack-core</artifactId>
+            <version>1.4.0-rc-1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.ratpack</groupId>
+            <artifactId>ratpack-guice</artifactId>
+            <version>1.4.0-rc-1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapdb</groupId>
+            <artifactId>mapdb</artifactId>
+            <version>3.0.1</version>
         </dependency>
     </dependencies>
 
@@ -99,7 +94,7 @@
                     <!-- MainClass in mainfest make a executable jar -->
                     <archive>
                         <manifest>
-                            <mainClass>com.bol.team5f.lazybot.Bot</mainClass>
+                            <mainClass>com.bol.lazybot.Bot</mainClass>
                         </manifest>
                     </archive>
 

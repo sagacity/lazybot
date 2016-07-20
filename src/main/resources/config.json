@@ -1,0 +1,6 @@
+{
+  "server": {
+    "development": true,
+    "publicAddress": "https://0a83182c.ngrok.io"
+  }
+}

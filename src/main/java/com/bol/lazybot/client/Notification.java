@@ -1,9 +1,9 @@
-package com.bol.team5f.lazybot.api;
+package com.bol.lazybot.client;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 @AllArgsConstructor
 public class Notification {
     private String from;
