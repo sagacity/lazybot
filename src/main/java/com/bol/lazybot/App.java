@@ -42,8 +42,8 @@ public class App {
     private static Action<ServerConfigBuilder> config() {
         return c -> c
                 .json(Resources.getResource("config.json"))
-                .env()
-                .sysProps()
+                .env("LAZYBOT_")
+                .sysProps("lazybot.")
                 .require("/hipchat", HipChatConfig.class);
     }
 }
