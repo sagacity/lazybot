@@ -1,9 +1,7 @@
 package com.bol.lazybot;
 
-import com.bol.lazybot.client.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.bol.lazybot.hipchat.client.*;
 import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import okhttp3.OkHttpClient;
 

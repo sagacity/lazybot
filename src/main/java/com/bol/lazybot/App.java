@@ -1,8 +1,9 @@
 package com.bol.lazybot;
 
-import com.bol.lazybot.client.OrchestrationService;
-import com.bol.lazybot.server.capabilities.GetCapabilities;
-import com.bol.lazybot.server.install.PostInstallation;
+import com.bol.lazybot.bot.BotOrchestrationService;
+import com.bol.lazybot.hipchat.server.capabilities.GetCapabilitiesHandler;
+import com.bol.lazybot.hipchat.server.install.InstallationHandler;
+import com.bol.lazybot.hipchat.server.webhooks.RoomMessageHandler;
 import com.google.common.io.Resources;
 import lombok.extern.slf4j.Slf4j;
 import ratpack.func.Action;
@@ -12,8 +13,9 @@ import ratpack.registry.Registry;
 import ratpack.server.RatpackServer;
 import ratpack.server.ServerConfigBuilder;
 
-import static com.bol.lazybot.server.Paths.PATH_CAPABILITIES;
-import static com.bol.lazybot.server.Paths.PATH_INSTALL;
+import static com.bol.lazybot.hipchat.server.Paths.PATH_CAPABILITIES;
+import static com.bol.lazybot.hipchat.server.Paths.PATH_INSTALL;
+import static com.bol.lazybot.hipchat.server.Paths.PATH_WEBHOOK_ROOM_MESSAGE;
 
 @Slf4j
 public class App {
@@ -22,9 +24,10 @@ public class App {
                 .serverConfig(config())
                 .registry(registry())
                 .handlers(chain -> chain
-                        .get(PATH_CAPABILITIES, GetCapabilities.class)
-                        .post(PATH_INSTALL, PostInstallation.class)
-                        .delete(PATH_INSTALL + "/:oauthid", PostInstallation.class)
+                        .get(PATH_CAPABILITIES, GetCapabilitiesHandler.class)
+                        .post(PATH_INSTALL, InstallationHandler.class)
+                        .delete(PATH_INSTALL + "/:oauthid", InstallationHandler.class)
+                        .post(PATH_WEBHOOK_ROOM_MESSAGE, RoomMessageHandler.class)
                 )
         );
     }
@@ -35,7 +38,7 @@ public class App {
                 .module(ServerModule.class)
                 .module(DatabaseModule.class)
                 .module(PluginModule.class)
-                .bind(OrchestrationService.class)
+                .bind(BotOrchestrationService.class)
         );
     }
 
