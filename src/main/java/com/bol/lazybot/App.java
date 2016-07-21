@@ -43,7 +43,7 @@ public class App {
         return c -> c
                 .json(Resources.getResource("config.json"))
                 .env()
-                .sysProps();
-                //.require("/db", HikariConfig.class)
+                .sysProps()
+                .require("/hipchat", HipChatConfig.class);
     }
 }

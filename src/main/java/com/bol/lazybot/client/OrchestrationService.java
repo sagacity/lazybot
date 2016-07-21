@@ -62,7 +62,7 @@ public class OrchestrationService implements Service {
     }
 
     private RoomApi getRoomApi(final Installation installation) throws IOException {
-        final RequestTokenResponse response = oAuthApi.requestToken(installation.getOauthId(), installation.getOauthSecret(), "send_notification+view_messages+view_room");
+        final RequestTokenResponse response = oAuthApi.requestToken(installation.getOauthId(), installation.getOauthSecret());
         return roomApiFactory.create(new RoomId(installation.getRoomId()), new OAuthToken(response.getAccessToken()));
     }
 }

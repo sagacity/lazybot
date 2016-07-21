@@ -1,5 +1,6 @@
 package com.bol.lazybot.server.capabilities;
 
+import com.bol.lazybot.HipChatConfig;
 import com.bol.lazybot.server.capabilities.dto.*;
 import ratpack.handling.Context;
 import ratpack.handling.Handler;
@@ -15,10 +16,12 @@ import static ratpack.jackson.Jackson.json;
 @Singleton
 public class GetCapabilities implements Handler {
     private final ServerConfig serverConfig;
+    private final HipChatConfig hipChatConfig;
 
     @Inject
-    public GetCapabilities(final ServerConfig serverConfig) {
+    public GetCapabilities(final ServerConfig serverConfig, final HipChatConfig hipChatConfig) {
         this.serverConfig = serverConfig;
+        this.hipChatConfig = hipChatConfig;
     }
 
     @Override
@@ -46,9 +49,7 @@ public class GetCapabilities implements Handler {
                                 )
                                 .hipChatApiConsumer(
                                         HipChatApiConsumer.builder()
-                                                .scope("send_notification")
-                                                .scope("view_messages")
-                                                .scope("view_room")
+                                                .scopes(hipChatConfig.getScopes())
                                                 .build()
                                 )
                                 .build()

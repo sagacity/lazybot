@@ -2,5 +2,12 @@
   "server": {
     "development": true,
     "publicAddress": "https://8980c1b6.ngrok.io"
+  },
+  "hipchat": {
+    "scopes": [
+      "send_notification",
+      "view_messages",
+      "view_room"
+    ]
   }
 }
