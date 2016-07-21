@@ -1,7 +1,7 @@
 {
   "server": {
     "development": true,
-    "publicAddress": "https://8980c1b6.ngrok.io"
+    "publicAddress": "https://f0e24532.ngrok.io"
   },
   "hipchat": {
     "scopes": [

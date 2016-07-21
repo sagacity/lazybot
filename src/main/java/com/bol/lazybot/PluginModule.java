@@ -2,7 +2,7 @@ package com.bol.lazybot;
 
 import com.bol.lazybot.domain.PluginDataRepository;
 import com.bol.lazybot.domain.PluginDataRepositoryFactory;
-import com.bol.lazybot.domain.PluginDataRepositoryMapDb;
+import com.bol.lazybot.domain.PluginDataRepositoryPersistent;
 import com.bol.lazybot.plugins.Plugin;
 import com.bol.lazybot.plugins.eod.EodPlugin;
 import com.google.inject.AbstractModule;
@@ -16,7 +16,7 @@ public class PluginModule extends AbstractModule {
         pluginBinder.addBinding().to(EodPlugin.class);
 
         install(new FactoryModuleBuilder()
-                .implement(PluginDataRepository.class, PluginDataRepositoryMapDb.class)
+                .implement(PluginDataRepository.class, PluginDataRepositoryPersistent.class)
                 .build(PluginDataRepositoryFactory.class));
     }
 }

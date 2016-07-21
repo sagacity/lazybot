@@ -3,33 +3,31 @@ package com.bol.lazybot.domain;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
-import org.mapdb.DB;
-import org.mapdb.Serializer;
+import net.openhft.chronicle.map.ChronicleMap;
 
 import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 import static com.bol.lazybot.utils.JacksonUtils.deserialize;
 import static com.bol.lazybot.utils.JacksonUtils.serialize;
 
-public class InstallationRepositoryMapDb implements InstallationRepository {
-    private final DB db;
+public class InstallationRepositoryPersistent implements InstallationRepository {
     private final ObjectMapper objectMapper;
-    private final ConcurrentMap<String, String> installations;
+    private final ChronicleMap<String, String> store;
 
     @Inject
-    public InstallationRepositoryMapDb(final DB db, final ObjectMapper objectMapper) {
-        this.db = db;
+    public InstallationRepositoryPersistent(final ObjectMapper objectMapper) throws IOException {
         this.objectMapper = objectMapper;
-        this.installations = db.hashMap("installations", Serializer.STRING, Serializer.STRING).createOrOpen();
+        this.store = ChronicleMap.of(String.class, String.class).averageKeySize(32).averageValueSize(500).entries(5000).createOrRecoverPersistedTo(new File("target/installations.db"));
     }
 
     @Override
     public ImmutableCollection<Installation> findAll() {
-        final List<Installation> installations = this.installations.values()
+        final List<Installation> installations = this.store.values()
                 .stream()
                 .map(json -> deserialize(objectMapper, json, Installation.class))
                 .collect(Collectors.toList());
@@ -38,20 +36,18 @@ public class InstallationRepositoryMapDb implements InstallationRepository {
 
     @Override
     public Optional<Installation> findByOAuthId(final String oauthId) {
-        final String json = installations.get(oauthId);
+        final String json = store.get(oauthId);
         if (json == null) return Optional.empty();
         return Optional.of(deserialize(objectMapper, json, Installation.class));
     }
 
     @Override
     public void save(final Installation installation) {
-        installations.put(installation.getOauthId(), serialize(objectMapper, installation));
-        db.commit();
+        store.put(installation.getOauthId(), serialize(objectMapper, installation));
     }
 
     @Override
     public void delete(final String oauthId) {
-        installations.remove(oauthId);
-        db.commit();
+        store.remove(oauthId);
     }
 }
