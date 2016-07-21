@@ -17,4 +17,10 @@ public class RequestTokenResponse {
 
     @JsonProperty("expires_in")
     private long expiresIn;
+
+    @JsonProperty("group_name")
+    private String groupName;
+
+    @JsonProperty("group_id")
+    private String groupId;
 }

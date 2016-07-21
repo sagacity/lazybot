@@ -31,6 +31,7 @@ public class App {
 
     private static Function<Registry, Registry> registry() {
         return Guice.registry(b -> b
+                .module(ClientModule.class)
                 .module(ServerModule.class)
                 .module(DatabaseModule.class)
                 .module(PluginModule.class)

@@ -5,8 +5,16 @@ import com.bol.lazybot.plugins.Plugin;
 import com.bol.lazybot.plugins.PluginContext;
 
 public class EodPlugin implements Plugin {
+    private PluginContext context;
+
     @Override
     public void onStart(final PluginContext context) {
-        context.getRoomApi().sendNotification(context.getRoomId(), new Notification("bot", "text", "(hodor) Hodor"));
+        this.context = context;
+        context.getRoomApi().sendNotification(new Notification("eod", "text", "(hodor) Hodor"));
+    }
+
+    @Override
+    public void onStop() {
+        context.getRoomApi().sendNotification(new Notification("eod", "text", "Bye now"));
     }
 }
