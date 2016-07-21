@@ -30,7 +30,6 @@ public class RoomApiHttp implements RoomApi {
         this.httpClient = httpClient;
         this.oAuthApi = oAuthApi;
         this.installation = installation;
-        this.token = refreshOAuthToken();
     }
 
     @Override
@@ -48,16 +47,19 @@ public class RoomApiHttp implements RoomApi {
     }
 
     private void performRequest(Request.Builder request) {
-        request
-                .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + token);
+        request.header("Content-Type", "application/json");
 
         int retryCount = 5;
         while (retryCount-- != 0) {
             try {
+                if (token == null) token = refreshOAuthToken();
+
+                request.header("Authorization", "Bearer " + token);
                 final Response response = httpClient.newCall(request.build()).execute();
-                if (response.code() == 401) token = refreshOAuthToken();
-                return;
+                if (response.code() < 400) return;
+
+                // 401 means the OAuth may be invalid, so let's refresh it
+                if (response.code() == 401) token = null;
             } catch (IOException e) {
                 log.error("Could not perform call", e);
             }
