@@ -1,4 +1,4 @@
-package com.bol.lazybot.server.installed.dto;
+package com.bol.lazybot.server.install.dto;
 
 import lombok.Data;
 

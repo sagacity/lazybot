@@ -2,12 +2,10 @@ package com.bol.lazybot.client;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lombok.Builder;
-import lombok.Value;
+import lombok.*;
 
-@JsonDeserialize(builder = RequestTokenResponse.RequestTokenResponseBuilder.class)
-@Value
-@Builder
+@Data
+@NoArgsConstructor
 public class RequestTokenResponse {
     @JsonProperty("access_token")
     private String accessToken;

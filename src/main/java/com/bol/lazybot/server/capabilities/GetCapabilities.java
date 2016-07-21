@@ -1,6 +1,6 @@
-package com.bol.lazybot.server.capability;
+package com.bol.lazybot.server.capabilities;
 
-import com.bol.lazybot.server.capability.dto.*;
+import com.bol.lazybot.server.capabilities.dto.*;
 import ratpack.handling.Context;
 import ratpack.handling.Handler;
 import ratpack.server.ServerConfig;
@@ -8,21 +8,23 @@ import ratpack.server.ServerConfig;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static com.bol.lazybot.server.Paths.PATH_CAPABILITIES;
+import static com.bol.lazybot.server.Paths.PATH_INSTALL;
 import static ratpack.jackson.Jackson.json;
 
 @Singleton
-public class CapabilityHandler implements Handler {
+public class GetCapabilities implements Handler {
     private final ServerConfig serverConfig;
 
     @Inject
-    public CapabilityHandler(final ServerConfig serverConfig) {
+    public GetCapabilities(final ServerConfig serverConfig) {
         this.serverConfig = serverConfig;
     }
 
     @Override
     public void handle(Context context) throws Exception {
-        final String selfUrl = serverConfig.getPublicAddress().resolve("/capabilities").toString();
-        final String callbackUrl = serverConfig.getPublicAddress().resolve("/installed").toString();
+        final String selfUrl = serverConfig.getPublicAddress().resolve("/" + PATH_CAPABILITIES).toString();
+        final String callbackUrl = serverConfig.getPublicAddress().resolve("/" + PATH_INSTALL).toString();
 
         final Capabilities caps = Capabilities.builder()
                 .name("LazyBot")

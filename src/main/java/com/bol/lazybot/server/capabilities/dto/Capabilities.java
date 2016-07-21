@@ -1,4 +1,4 @@
-package com.bol.lazybot.server.capability.dto;
+package com.bol.lazybot.server.capabilities.dto;
 
 import lombok.Builder;
 import lombok.Value;
