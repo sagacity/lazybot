@@ -24,7 +24,7 @@ public class App {
                 .handlers(chain -> chain
                         .get(PATH_CAPABILITIES, GetCapabilities.class)
                         .post(PATH_INSTALL, PostInstallation.class)
-                        .delete(PATH_INSTALL + "/:oauth-id", PostInstallation.class)
+                        .delete(PATH_INSTALL + "/:oauthid", PostInstallation.class)
                 )
         );
     }
