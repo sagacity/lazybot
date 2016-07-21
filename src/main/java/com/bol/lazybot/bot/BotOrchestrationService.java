@@ -68,7 +68,7 @@ public class BotOrchestrationService implements Service {
         final String messageUrl = serverConfig.getPublicAddress().resolve("/" + PATH_WEBHOOK_ROOM_MESSAGE).toString();
 
         log.info("Registering roomApi");
-        final RoomApi roomApi = getRoomApi(installation);
+        final RoomApi roomApi = roomApiFactory.create(installation);
 
         log.info("Registering webhook");
         roomApi.createWebhook(CreateWebhookRequest.builder()
@@ -114,11 +114,6 @@ public class BotOrchestrationService implements Service {
                 plugin.getPlugin().onStop(false);
             }
         }
-    }
-
-    private RoomApi getRoomApi(final Installation installation) throws IOException {
-        final RequestTokenResponse response = oAuthApi.requestToken(installation.getOauthId(), installation.getOauthSecret());
-        return roomApiFactory.create(new RoomId(installation.getRoomId()), new OAuthToken(response.getAccessToken()));
     }
 
     public void removeInstallation(final String oauthId) {
