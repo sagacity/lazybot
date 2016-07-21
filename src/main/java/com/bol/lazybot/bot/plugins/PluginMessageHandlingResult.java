@@ -1,4 +1,4 @@
-package com.bol.lazybot.plugins;
+package com.bol.lazybot.bot.plugins;
 
 public enum PluginMessageHandlingResult {
     SUCCESS,

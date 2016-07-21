@@ -1,4 +1,4 @@
-package com.bol.lazybot;
+package com.bol.lazybot.config.modules;
 
 import com.bol.lazybot.hipchat.installations.InstallationRepository;
 import com.bol.lazybot.hipchat.installations.InstallationRepositoryPersistent;

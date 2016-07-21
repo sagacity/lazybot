@@ -1,6 +1,11 @@
 package com.bol.lazybot;
 
 import com.bol.lazybot.bot.BotOrchestrationService;
+import com.bol.lazybot.config.*;
+import com.bol.lazybot.config.modules.ClientModule;
+import com.bol.lazybot.config.modules.DatabaseModule;
+import com.bol.lazybot.config.modules.PluginModule;
+import com.bol.lazybot.config.modules.ServerModule;
 import com.bol.lazybot.hipchat.server.capabilities.GetCapabilitiesHandler;
 import com.bol.lazybot.hipchat.server.install.InstallationHandler;
 import com.bol.lazybot.hipchat.server.webhooks.RoomMessageHandler;

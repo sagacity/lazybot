@@ -1,6 +1,6 @@
 package com.bol.lazybot.hipchat.client;
 
-import com.bol.lazybot.HipChatConfig;
+import com.bol.lazybot.config.HipChatConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 

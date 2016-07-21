@@ -1,6 +1,6 @@
 package com.bol.lazybot.hipchat.server.capabilities;
 
-import com.bol.lazybot.HipChatConfig;
+import com.bol.lazybot.config.HipChatConfig;
 import com.bol.lazybot.hipchat.server.capabilities.dto.*;
 import ratpack.handling.Context;
 import ratpack.handling.Handler;

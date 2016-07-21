@@ -1,4 +1,4 @@
-package com.bol.lazybot;
+package com.bol.lazybot.config.modules;
 
 import com.bol.lazybot.hipchat.client.*;
 import com.google.inject.AbstractModule;

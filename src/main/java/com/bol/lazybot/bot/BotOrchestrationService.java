@@ -1,8 +1,8 @@
 package com.bol.lazybot.bot;
 
+import com.bol.lazybot.bot.plugins.*;
 import com.bol.lazybot.hipchat.client.*;
 import com.bol.lazybot.hipchat.installations.*;
-import com.bol.lazybot.plugins.*;
 import com.bol.lazybot.hipchat.server.webhooks.dto.RoomMessage;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;

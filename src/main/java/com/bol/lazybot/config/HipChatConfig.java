@@ -1,4 +1,4 @@
-package com.bol.lazybot;
+package com.bol.lazybot.config;
 
 import lombok.Data;
 

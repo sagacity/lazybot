@@ -1,9 +1,9 @@
-package com.bol.lazybot;
+package com.bol.lazybot.config.modules;
 
-import com.bol.lazybot.plugins.PluginDataRepository;
-import com.bol.lazybot.plugins.PluginDataRepositoryFactory;
-import com.bol.lazybot.plugins.PluginDataRepositoryPersistent;
-import com.bol.lazybot.plugins.Plugin;
+import com.bol.lazybot.bot.plugins.PluginDataRepository;
+import com.bol.lazybot.bot.plugins.PluginDataRepositoryFactory;
+import com.bol.lazybot.bot.plugins.PluginDataRepositoryPersistent;
+import com.bol.lazybot.bot.plugins.Plugin;
 import com.bol.lazybot.plugins.eod.EodPlugin;
 import com.bol.lazybot.plugins.help.HelpPlugin;
 import com.google.inject.AbstractModule;

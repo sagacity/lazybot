@@ -1,4 +1,4 @@
-package com.bol.lazybot.plugins;
+package com.bol.lazybot.bot.plugins;
 
 import com.bol.lazybot.hipchat.client.RoomId;
 

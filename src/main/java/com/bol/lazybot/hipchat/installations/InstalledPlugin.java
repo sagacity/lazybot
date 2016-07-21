@@ -1,7 +1,7 @@
 package com.bol.lazybot.hipchat.installations;
 
-import com.bol.lazybot.plugins.Plugin;
-import com.bol.lazybot.plugins.PluginContext;
+import com.bol.lazybot.bot.plugins.Plugin;
+import com.bol.lazybot.bot.plugins.PluginContext;
 import lombok.Builder;
 import lombok.Value;
 
