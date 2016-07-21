@@ -39,6 +39,7 @@ public class PostInstallation extends InjectionHandler {
                     final String oauthId = ctx.getPathTokens().get("oauthid");
                     orchestrationService.removeInstallation(oauthId);
                     installationRepository.delete(oauthId);
+                    ctx.getResponse().status(Status.OK).send();
                 })
         );
     }
