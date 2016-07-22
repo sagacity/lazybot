@@ -1,12 +1,12 @@
 package org.royjacobs.lazybot.config.modules;
 
-import org.royjacobs.lazybot.hipchat.installations.InstallationRepository;
-import org.royjacobs.lazybot.hipchat.installations.InstallationRepositoryPersistent;
 import com.google.inject.AbstractModule;
+import org.royjacobs.lazybot.store.PersistentStoreFactory;
+import org.royjacobs.lazybot.store.StoreFactory;
 
 public class DatabaseModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(InstallationRepository.class).to(InstallationRepositoryPersistent.class);
+        bind(StoreFactory.class).to(PersistentStoreFactory.class);
     }
 }

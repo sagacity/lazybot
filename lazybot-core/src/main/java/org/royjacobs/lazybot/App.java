@@ -1,6 +1,7 @@
 package org.royjacobs.lazybot;
 
 import org.royjacobs.lazybot.bot.BotOrchestrationService;
+import org.royjacobs.lazybot.config.DatabaseConfig;
 import org.royjacobs.lazybot.config.HipChatConfig;
 import org.royjacobs.lazybot.config.modules.ClientModule;
 import org.royjacobs.lazybot.config.modules.DatabaseModule;
@@ -25,7 +26,12 @@ import static org.royjacobs.lazybot.hipchat.server.Paths.PATH_WEBHOOK_ROOM_MESSA
 @Slf4j
 public class App {
     public static void main(String[] args) throws Exception {
-        RatpackServer.start(s -> s
+        final RatpackServer server = createServer();
+        server.start();
+    }
+
+    public static RatpackServer createServer() throws Exception {
+        return RatpackServer.of(s -> s
                 .serverConfig(config())
                 .registry(registry())
                 .handlers(chain -> chain
@@ -52,6 +58,7 @@ public class App {
                 .json(Resources.getResource("config.json"))
                 .env("LAZYBOT_")
                 .sysProps("lazybot.")
-                .require("/hipchat", HipChatConfig.class);
+                .require("/hipchat", HipChatConfig.class)
+                .require("/db", DatabaseConfig.class);
     }
 }

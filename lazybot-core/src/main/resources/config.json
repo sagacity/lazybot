@@ -2,6 +2,9 @@
   "server": {
     "development": true
   },
+  "db": {
+    "folder": "target"
+  },
   "hipchat": {
     "scopes": [
       "send_notification",

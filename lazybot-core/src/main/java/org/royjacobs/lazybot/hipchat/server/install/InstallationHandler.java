@@ -2,13 +2,15 @@ package org.royjacobs.lazybot.hipchat.server.install;
 
 import org.royjacobs.lazybot.bot.BotOrchestrationService;
 import org.royjacobs.lazybot.hipchat.installations.Installation;
-import org.royjacobs.lazybot.hipchat.installations.InstallationRepository;
 import org.royjacobs.lazybot.hipchat.server.install.dto.InstalledInformation;
 import lombok.extern.slf4j.Slf4j;
+import org.royjacobs.lazybot.store.Store;
+import org.royjacobs.lazybot.store.StoreFactory;
 import ratpack.handling.Context;
 import ratpack.handling.InjectionHandler;
 import ratpack.http.Status;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static ratpack.jackson.Jackson.fromJson;
@@ -16,7 +18,14 @@ import static ratpack.jackson.Jackson.fromJson;
 @Singleton
 @Slf4j
 public class InstallationHandler extends InjectionHandler {
-    public void handle(final Context ctx, final InstallationRepository installationRepository, final BotOrchestrationService botOrchestrationService) throws Exception {
+    private final Store<Installation> installations;
+
+    @Inject
+    public InstallationHandler(final StoreFactory storeFactory) throws NoSuitableHandleMethodException {
+        installations = storeFactory.get("installations", Installation.class);
+    }
+
+    public void handle(final Context ctx, final BotOrchestrationService botOrchestrationService) throws Exception {
         ctx.byMethod(m -> m
                 .post(() -> ctx.parse(fromJson(InstalledInformation.class))
                         .next(info -> {
@@ -26,14 +35,14 @@ public class InstallationHandler extends InjectionHandler {
                                     .oauthSecret(info.getOauthSecret())
                                     .roomId(info.getRoomId())
                                     .build();
-                            installationRepository.save(installation);
+                            installations.save(installation.getOauthId(), installation);
                             botOrchestrationService.startInstallation(installation);
                         })
                         .then(info -> ctx.getResponse().status(Status.OK).send()))
                 .delete(() -> {
                     final String oauthId = ctx.getPathTokens().get("oauthid");
                     botOrchestrationService.removeInstallation(oauthId);
-                    installationRepository.delete(oauthId);
+                    installations.delete(oauthId);
                     ctx.getResponse().status(Status.OK).send();
                 })
         );

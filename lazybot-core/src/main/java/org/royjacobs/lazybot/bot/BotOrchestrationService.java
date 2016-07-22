@@ -9,8 +9,9 @@ import com.google.common.base.Splitter;
 import lombok.extern.slf4j.Slf4j;
 import org.royjacobs.lazybot.hipchat.installations.Installation;
 import org.royjacobs.lazybot.hipchat.installations.InstallationContext;
-import org.royjacobs.lazybot.hipchat.installations.InstallationRepository;
 import org.royjacobs.lazybot.hipchat.installations.InstalledPlugin;
+import org.royjacobs.lazybot.store.Store;
+import org.royjacobs.lazybot.store.StoreFactory;
 import ratpack.server.ServerConfig;
 import ratpack.service.Service;
 import ratpack.service.StartEvent;
@@ -25,35 +26,29 @@ import java.util.*;
 @Slf4j
 @Singleton
 public class BotOrchestrationService implements Service {
-    private final ServerConfig serverConfig;
-    private final InstallationRepository installationRepository;
     private final Provider<Set<Plugin>> pluginProvider;
-    private final OAuthApi oAuthApi;
     private final RoomApiFactory roomApiFactory;
     private final PluginDataRepositoryFactory pluginDataRepositoryFactory;
 
     private final Map<Installation, InstallationContext> activeInstallations;
+    private final Store<Installation> storedInstallations;
 
     @Inject
     public BotOrchestrationService(
-            final ServerConfig serverConfig,
-            final InstallationRepository installationRepository,
+            final StoreFactory storeFactory,
             final Provider<Set<Plugin>> pluginProvider,
-            final OAuthApi oAuthApi,
             final RoomApiFactory roomApiFactory,
             final PluginDataRepositoryFactory pluginDataRepositoryFactory
     ) {
-        this.serverConfig = serverConfig;
-        this.installationRepository = installationRepository;
+        storedInstallations = storeFactory.get("installations", Installation.class);
         this.pluginProvider = pluginProvider;
-        this.oAuthApi = oAuthApi;
         this.roomApiFactory = roomApiFactory;
         this.pluginDataRepositoryFactory = pluginDataRepositoryFactory;
         this.activeInstallations = new HashMap<>();
     }
 
     public void onStart(final StartEvent event) throws IOException {
-        for (Installation installation : installationRepository.findAll()) {
+        for (Installation installation : storedInstallations.findAll()) {
             try {
                 startInstallation(installation);
             } catch (Exception e) {
