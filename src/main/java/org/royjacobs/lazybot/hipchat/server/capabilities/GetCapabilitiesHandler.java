@@ -27,6 +27,7 @@ public class GetCapabilitiesHandler implements Handler {
     public void handle(Context context) throws Exception {
         final String selfUrl = serverConfig.getPublicAddress().resolve("/" + Paths.PATH_CAPABILITIES).toString();
         final String callbackUrl = serverConfig.getPublicAddress().resolve("/" + Paths.PATH_INSTALL).toString();
+        final String messageUrl = serverConfig.getPublicAddress().resolve("/" + Paths.PATH_WEBHOOK_ROOM_MESSAGE).toString();
 
         final Capabilities caps = Capabilities.builder()
                 .name("LazyBot")
@@ -50,6 +51,14 @@ public class GetCapabilitiesHandler implements Handler {
                                         HipChatApiConsumer.builder()
                                                 .scopes(hipChatConfig.getScopes())
                                                 .build()
+                                )
+                                .webhook(WebHook.builder()
+                                        .name("messages")
+                                        .event("room_message")
+                                        .url(messageUrl)
+                                        .authentication("none")
+                                        .pattern("^/[lL][aA][zZ][yY][bB][oO][tT]")
+                                        .build()
                                 )
                                 .build()
                 )

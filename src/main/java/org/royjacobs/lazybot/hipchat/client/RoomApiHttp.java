@@ -38,13 +38,6 @@ public class RoomApiHttp implements RoomApi {
                 .post(RequestBody.create(MediaType.parse("application/json"), JacksonUtils.serialize(objectMapper, notification))));
     }
 
-    @Override
-    public void createWebhook(final CreateWebhookRequest createWebhookRequest) {
-        performRequest(new Request.Builder()
-                .url("https://api.hipchat.com/v2/room/" + installation.getRoomId() + "/extension/webhook/" + createWebhookRequest.getKey())
-                .put(RequestBody.create(MediaType.parse("application/json"), JacksonUtils.serialize(objectMapper, createWebhookRequest))));
-    }
-
     private void performRequest(Request.Builder request) {
         request.header("Content-Type", "application/json");
 

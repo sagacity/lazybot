@@ -10,7 +10,6 @@ import org.royjacobs.lazybot.hipchat.installations.Installation;
 import org.royjacobs.lazybot.hipchat.installations.InstallationContext;
 import org.royjacobs.lazybot.hipchat.installations.InstallationRepository;
 import org.royjacobs.lazybot.hipchat.installations.InstalledPlugin;
-import org.royjacobs.lazybot.hipchat.server.Paths;
 import ratpack.server.ServerConfig;
 import ratpack.service.Service;
 import ratpack.service.StartEvent;
@@ -67,18 +66,8 @@ public class BotOrchestrationService implements Service {
 
         final InstallationContext.InstallationContextBuilder builder = InstallationContext.builder();
 
-        final String messageUrl = serverConfig.getPublicAddress().resolve("/" + Paths.PATH_WEBHOOK_ROOM_MESSAGE).toString();
-
-        log.info("Registering roomApi");
+        log.info("Creating roomApi");
         final RoomApi roomApi = roomApiFactory.create(installation);
-
-        log.info("Registering webhook");
-        roomApi.createWebhook(CreateWebhookRequest.builder()
-                        .key("messages")
-                        .event("room_message")
-                        .url(messageUrl)
-                        .build()
-        );
 
         log.info("Creating plugins");
         final Set<Plugin> plugins = new HashSet<>();
