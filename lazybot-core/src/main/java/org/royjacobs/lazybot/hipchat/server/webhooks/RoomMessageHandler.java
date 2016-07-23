@@ -1,20 +1,16 @@
 package org.royjacobs.lazybot.hipchat.server.webhooks;
 
 import com.google.common.base.Throwables;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 import org.royjacobs.lazybot.bot.BotOrchestrationService;
 import org.royjacobs.lazybot.hipchat.installations.InstallationContext;
-import org.royjacobs.lazybot.hipchat.server.webhooks.dto.RoomMessage;
+import org.royjacobs.lazybot.api.domain.RoomMessage;
 import lombok.extern.slf4j.Slf4j;
 import ratpack.handling.Context;
 import ratpack.handling.InjectionHandler;
 import ratpack.http.Status;
 import ratpack.jackson.Jackson;
-
-import java.util.Arrays;
-import java.util.Optional;
 
 import static ratpack.jackson.Jackson.fromJson;
 

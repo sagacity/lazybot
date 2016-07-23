@@ -1,6 +1,7 @@
 package org.royjacobs.lazybot.hipchat.client;
 
-import org.royjacobs.lazybot.hipchat.client.dto.Notification;
+import org.royjacobs.lazybot.api.hipchat.RoomApi;
+import org.royjacobs.lazybot.api.domain.Notification;
 import org.royjacobs.lazybot.hipchat.installations.Installation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;

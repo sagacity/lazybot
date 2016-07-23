@@ -3,6 +3,7 @@ package org.royjacobs.lazybot.config.modules;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import okhttp3.OkHttpClient;
+import org.royjacobs.lazybot.api.hipchat.RoomApi;
 import org.royjacobs.lazybot.hipchat.client.*;
 
 public class ClientModule extends AbstractModule {

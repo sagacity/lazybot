@@ -1,7 +1,8 @@
 package org.royjacobs.lazybot.bot;
 
-import org.royjacobs.lazybot.bot.plugins.Plugin;
-import org.royjacobs.lazybot.bot.plugins.PluginMessageHandlingResult;
+import org.royjacobs.lazybot.api.domain.Command;
+import org.royjacobs.lazybot.api.plugins.Plugin;
+import org.royjacobs.lazybot.api.plugins.PluginMessageHandlingResult;
 
 import java.util.Set;
 

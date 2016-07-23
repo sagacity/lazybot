@@ -1,4 +1,4 @@
-package org.royjacobs.lazybot.hipchat.server.webhooks.dto;
+package org.royjacobs.lazybot.api.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

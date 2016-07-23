@@ -1,4 +1,4 @@
-package org.royjacobs.lazybot.bot.plugins;
+package org.royjacobs.lazybot.api.plugins;
 
 public enum PluginMessageHandlingResult {
     SUCCESS,

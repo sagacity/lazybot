@@ -1,6 +1,6 @@
-package org.royjacobs.lazybot.bot.plugins;
+package org.royjacobs.lazybot.api.plugins;
 
-import org.royjacobs.lazybot.bot.Command;
+import org.royjacobs.lazybot.api.domain.Command;
 
 public interface Plugin {
     PluginDescriptor getDescriptor();

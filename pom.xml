@@ -12,5 +12,7 @@
     <modules>
         <module>lazybot-core</module>
         <module>lazybot-deploy</module>
+        <module>lazybot-plugin-weather</module>
+        <module>lazybot-api</module>
     </modules>
 </project>

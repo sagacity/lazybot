@@ -1,4 +1,4 @@
-package org.royjacobs.lazybot.hipchat.client.dto;
+package org.royjacobs.lazybot.api.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Value;

@@ -1,7 +1,7 @@
 package org.royjacobs.lazybot.hipchat.installations;
 
-import org.royjacobs.lazybot.bot.plugins.Plugin;
-import org.royjacobs.lazybot.bot.plugins.PluginContext;
+import org.royjacobs.lazybot.api.plugins.Plugin;
+import org.royjacobs.lazybot.api.plugins.PluginContext;
 import lombok.Builder;
 import lombok.Value;
 

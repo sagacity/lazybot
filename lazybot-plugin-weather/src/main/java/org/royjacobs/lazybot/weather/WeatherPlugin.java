@@ -1,4 +1,4 @@
-package org.royjacobs.lazybot.plugins.eod;
+package org.royjacobs.lazybot.weather;
 
 import org.royjacobs.lazybot.api.domain.Command;
 import org.royjacobs.lazybot.api.domain.Notification;
@@ -6,32 +6,27 @@ import org.royjacobs.lazybot.api.plugins.Plugin;
 import org.royjacobs.lazybot.api.plugins.PluginContext;
 import org.royjacobs.lazybot.api.plugins.PluginDescriptor;
 import org.royjacobs.lazybot.api.plugins.PluginMessageHandlingResult;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
-public class EodPlugin implements Plugin {
+public class WeatherPlugin implements Plugin {
     private PluginContext context;
 
-    @Override
     public PluginDescriptor getDescriptor() {
         return PluginDescriptor.builder()
-                .key("eod")
+                .key("weather")
                 .build();
     }
 
-    @Override
-    public void onStart(final PluginContext context) {
+    public void onStart(PluginContext context) {
         this.context = context;
     }
 
-    @Override
-    public void onStop(final boolean removed) {
+    public void onStop(boolean removed) {
+
     }
 
-    @Override
-    public PluginMessageHandlingResult onCommand(final Command command) {
-        if (command.getCommand().equalsIgnoreCase("eod")) {
-            context.getRoomApi().sendNotification(new Notification("eod", "text", "Engineer on Duty, am I right?"));
+    public PluginMessageHandlingResult onCommand(Command command) {
+        if (command.getCommand().equalsIgnoreCase("weather")) {
+            context.getRoomApi().sendNotification(new Notification("weather", "text", "Rain, probably?"));
             return PluginMessageHandlingResult.SUCCESS;
         }
         return PluginMessageHandlingResult.NOT_INTENDED_FOR_THIS_PLUGIN;

@@ -1,4 +1,4 @@
-package org.royjacobs.lazybot.bot.plugins;
+package org.royjacobs.lazybot.api.plugins;
 
 import lombok.Builder;
 import lombok.Value;

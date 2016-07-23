@@ -3,6 +3,7 @@ package org.royjacobs.lazybot.store;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
+import org.royjacobs.lazybot.api.store.Store;
 import org.royjacobs.lazybot.utils.JacksonUtils;
 
 import java.util.List;
@@ -10,12 +11,12 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
-public class Store<T> {
+public class JacksonStore<T> implements Store<T> {
     private final ObjectMapper objectMapper;
     private final ConcurrentMap<String, String> map;
     private final Class<T> clazz;
 
-    Store(final ObjectMapper objectMapper, final ConcurrentMap<String, String> map, Class<T> clazz) {
+    JacksonStore(final ObjectMapper objectMapper, final ConcurrentMap<String, String> map, Class<T> clazz) {
         this.objectMapper = objectMapper;
         this.map = map;
         this.clazz = clazz;

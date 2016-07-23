@@ -6,6 +6,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.extern.slf4j.Slf4j;
 import net.openhft.chronicle.map.ChronicleMap;
+import org.royjacobs.lazybot.api.store.Store;
 import org.royjacobs.lazybot.config.DatabaseConfig;
 
 import javax.inject.Inject;
@@ -27,7 +28,7 @@ public class PersistentStoreFactory implements StoreFactory {
 
     public <T> Store<T> get(final String key, final Class<T> clazz) {
         final Object existingStore = storeCache.getIfPresent(key);
-        if (existingStore != null) return (Store<T>)existingStore;
+        if (existingStore != null) return (JacksonStore<T>)existingStore;
 
         final File file = new File(databaseConfig.getFolder(), key + ".db");
         final ChronicleMap<String, String> map;
@@ -38,7 +39,7 @@ public class PersistentStoreFactory implements StoreFactory {
             throw Throwables.propagate(e);
         }
 
-        final Store<T> store = new Store<>(objectMapper, map, clazz);
+        final Store<T> store = new JacksonStore<>(objectMapper, map, clazz);
         storeCache.put(key, store);
         return store;
     }

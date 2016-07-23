@@ -1,11 +1,11 @@
 package org.royjacobs.lazybot.plugins.help;
 
-import org.royjacobs.lazybot.bot.Command;
-import org.royjacobs.lazybot.hipchat.client.dto.Notification;
-import org.royjacobs.lazybot.bot.plugins.Plugin;
-import org.royjacobs.lazybot.bot.plugins.PluginContext;
-import org.royjacobs.lazybot.bot.plugins.PluginDescriptor;
-import org.royjacobs.lazybot.bot.plugins.PluginMessageHandlingResult;
+import org.royjacobs.lazybot.api.domain.Command;
+import org.royjacobs.lazybot.api.domain.Notification;
+import org.royjacobs.lazybot.api.plugins.Plugin;
+import org.royjacobs.lazybot.api.plugins.PluginContext;
+import org.royjacobs.lazybot.api.plugins.PluginDescriptor;
+import org.royjacobs.lazybot.api.plugins.PluginMessageHandlingResult;
 
 import java.util.stream.Collectors;
 

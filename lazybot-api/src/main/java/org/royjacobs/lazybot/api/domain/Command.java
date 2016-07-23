@@ -1,6 +1,5 @@
-package org.royjacobs.lazybot.bot;
+package org.royjacobs.lazybot.api.domain;
 
-import org.royjacobs.lazybot.hipchat.server.webhooks.dto.RoomMessage;
 import lombok.Builder;
 import lombok.Value;
 

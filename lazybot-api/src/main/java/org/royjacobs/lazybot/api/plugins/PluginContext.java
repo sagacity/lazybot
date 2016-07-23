@@ -1,9 +1,9 @@
-package org.royjacobs.lazybot.bot.plugins;
+package org.royjacobs.lazybot.api.plugins;
 
-import org.royjacobs.lazybot.hipchat.client.RoomApi;
 import lombok.Builder;
 import lombok.Value;
-import org.royjacobs.lazybot.store.Store;
+import org.royjacobs.lazybot.api.hipchat.RoomApi;
+import org.royjacobs.lazybot.api.store.Store;
 
 import java.util.Set;
 
