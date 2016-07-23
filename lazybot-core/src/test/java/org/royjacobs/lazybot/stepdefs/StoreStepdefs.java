@@ -14,6 +14,7 @@ import org.royjacobs.lazybot.store.StoreFactory;
 
 import java.util.Optional;
 
+import static java.lang.System.getProperty;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -29,7 +30,7 @@ public class StoreStepdefs {
 
     private DatabaseConfig getDatabaseConfig() {
         final DatabaseConfig cfg = new DatabaseConfig();
-        cfg.setFolder("target/test");
+        cfg.setFolder(getProperty("java.io.tmpdir"));
         return cfg;
     }
 

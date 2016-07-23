@@ -15,6 +15,6 @@ public class TestServer extends ServerBackedApplicationUnderTest {
     @Override
     protected void addImpositions(ImpositionsSpec impositions) {
         super.addImpositions(impositions);
-        impositions.add(ServerConfigImposition.of(s -> s.json(Resources.getResource("config-test.json"))));
+        //impositions.add(ServerConfigImposition.of(s -> s.json(Resources.getResource("config-test.json"))));
     }
 }
