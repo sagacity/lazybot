@@ -12,6 +12,9 @@ import org.royjacobs.lazybot.config.DatabaseConfig;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @Slf4j
 public class PersistentStoreFactory implements StoreFactory {
@@ -29,6 +32,15 @@ public class PersistentStoreFactory implements StoreFactory {
     public <T> Store<T> get(final String key, final Class<T> clazz) {
         final Object existingStore = storeCache.getIfPresent(key);
         if (existingStore != null) return (JacksonStore<T>)existingStore;
+
+        try {
+            Files.createDirectory(Paths.get(databaseConfig.getFolder()));
+        } catch (FileAlreadyExistsException e){
+            // fine!
+        } catch (IOException e) {
+            log.error("Could not create storage folder for database");
+            throw Throwables.propagate(e);
+        }
 
         final File file = new File(databaseConfig.getFolder(), key + ".db");
         final ChronicleMap<String, String> map;
