@@ -1,18 +1,18 @@
 package org.royjacobs.lazybot.bot;
 
-import org.royjacobs.lazybot.bot.plugins.*;
-import org.royjacobs.lazybot.hipchat.client.*;
-import org.royjacobs.lazybot.hipchat.client.dto.RoomId;
-import org.royjacobs.lazybot.hipchat.server.webhooks.dto.RoomMessage;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import lombok.extern.slf4j.Slf4j;
+import org.royjacobs.lazybot.bot.plugins.*;
+import org.royjacobs.lazybot.hipchat.client.RoomApi;
+import org.royjacobs.lazybot.hipchat.client.RoomApiFactory;
+import org.royjacobs.lazybot.hipchat.client.dto.RoomId;
 import org.royjacobs.lazybot.hipchat.installations.Installation;
 import org.royjacobs.lazybot.hipchat.installations.InstallationContext;
 import org.royjacobs.lazybot.hipchat.installations.InstalledPlugin;
+import org.royjacobs.lazybot.hipchat.server.webhooks.dto.RoomMessage;
 import org.royjacobs.lazybot.store.Store;
 import org.royjacobs.lazybot.store.StoreFactory;
-import ratpack.server.ServerConfig;
 import ratpack.service.Service;
 import ratpack.service.StartEvent;
 import ratpack.service.StopEvent;
@@ -26,9 +26,9 @@ import java.util.*;
 @Slf4j
 @Singleton
 public class BotOrchestrationService implements Service {
+    private final StoreFactory storeFactory;
     private final Provider<Set<Plugin>> pluginProvider;
     private final RoomApiFactory roomApiFactory;
-    private final PluginDataRepositoryFactory pluginDataRepositoryFactory;
 
     private final Map<Installation, InstallationContext> activeInstallations;
     private final Store<Installation> storedInstallations;
@@ -37,14 +37,14 @@ public class BotOrchestrationService implements Service {
     public BotOrchestrationService(
             final StoreFactory storeFactory,
             final Provider<Set<Plugin>> pluginProvider,
-            final RoomApiFactory roomApiFactory,
-            final PluginDataRepositoryFactory pluginDataRepositoryFactory
+            final RoomApiFactory roomApiFactory
     ) {
-        storedInstallations = storeFactory.get("installations", Installation.class);
+        this.storeFactory = storeFactory;
         this.pluginProvider = pluginProvider;
         this.roomApiFactory = roomApiFactory;
-        this.pluginDataRepositoryFactory = pluginDataRepositoryFactory;
         this.activeInstallations = new HashMap<>();
+
+        storedInstallations = storeFactory.get("installations", Installation.class);
     }
 
     public void onStart(final StartEvent event) throws IOException {
@@ -68,28 +68,34 @@ public class BotOrchestrationService implements Service {
         final RoomApi roomApi = roomApiFactory.create(installation);
 
         log.info("Creating plugins");
-        final Set<Plugin> plugins = new HashSet<>();
-
         Set<PluginDescriptor> allDescriptors = new HashSet<>();
 
         pluginProvider.get().forEach(plugin -> {
             allDescriptors.add(plugin.getDescriptor());
 
-            final PluginContext context = PluginContext.builder()
+            final Store<? extends PluginGlobalData> globalStore = storeFactory.get("plugindata-" + plugin.getDescriptor().getKey(), plugin.getDescriptor().getGlobalDataClass());
+
+            final PluginContext.PluginContextBuilder pluginContextBuilder = PluginContext.builder()
                     .roomApi(roomApi)
                     .roomId(installation.getRoomId())
-                    .repository(pluginDataRepositoryFactory.create(new RoomId(installation.getRoomId()), plugin.getDescriptor()))
-                    .allDescriptors(allDescriptors) // because this list is mutable, it will eventually contain descriptors for all the plugins
-                    .build();
+                    .allDescriptors(allDescriptors); // because this list is mutable, it will eventually contain descriptors for all the plugins
 
+            if (plugin.getDescriptor().getRoomDataClass() != null) {
+                pluginContextBuilder.roomStore(storeFactory.get("plugindata-" + plugin.getDescriptor().getKey() + "-room-" + installation.getRoomId(), plugin.getDescriptor().getRoomDataClass()));
+            }
+
+            if (plugin.getDescriptor().getGlobalDataClass() != null) {
+                pluginContextBuilder.globalStore(storeFactory.get("plugindata-" + plugin.getDescriptor().getKey() + "-global", plugin.getDescriptor().getGlobalDataClass()));
+            }
+
+            final PluginContext pluginContext = pluginContextBuilder.build();
             final InstalledPlugin installedPlugin = InstalledPlugin.builder()
                     .plugin(plugin)
-                    .context(context)
+                    .context(pluginContext)
                     .build();
             builder.plugin(installedPlugin);
 
-            plugin.onStart(context);
-            plugins.add(plugin);
+            plugin.onStart(pluginContext);
         });
 
         log.info("Installation complete");
@@ -109,7 +115,7 @@ public class BotOrchestrationService implements Service {
         getInstallationByOauthId(oauthId).ifPresent(context -> {
             for (InstalledPlugin plugin : context.getPlugins()) {
                 // Remove context and clear any data
-                plugin.getContext().getRepository().clearAll();
+                plugin.getContext().getRoomStore().clearAll();
 
                 // Notify plugin
                 plugin.getPlugin().onStop(true);

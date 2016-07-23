@@ -3,6 +3,7 @@ package org.royjacobs.lazybot.bot.plugins;
 import org.royjacobs.lazybot.hipchat.client.RoomApi;
 import lombok.Builder;
 import lombok.Value;
+import org.royjacobs.lazybot.store.Store;
 
 import java.util.Set;
 
@@ -11,6 +12,7 @@ import java.util.Set;
 public class PluginContext {
     RoomApi roomApi;
     String roomId;
-    PluginDataRepository repository;
+    Store<? extends PluginRoomData> roomStore;
+    Store<? extends PluginGlobalData> globalStore;
     Set<PluginDescriptor> allDescriptors;
 }
