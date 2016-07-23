@@ -1,13 +1,20 @@
 ### Description
 
-It's lazy! It's a bot! It's **LazyBot**!
+**LazyBot** is a framework for building HipChat bots on the JVM. It comes with a bunch of (example) plugins that should give you a good idea on how to build your own plugins.
 
-### Configuration
-When starting you should provide a base-url for the bot using the Java system property `lazybot.server.publicAddress`.
+### Quickstart
+To quickly start playing with a bot, I suggest you use [ngrok](https://ngrok.com/). This allows you to expose your locally running bot to the internet with full support of HTTPS, which is what HipChat requires.
 
-Example: `-Dlazybot.server.publicAddress=https://41d2b126.ngrok.io`
+1. Start ngrok and make it listen to port 5050, which is where LazyBot will run:
+```
+ngrok http 5050
+```
+2. Edit `dist/example-config.json` and set the publicAddress to whatever ngrok has provided you with.
 
-Server port and many other things can also be configured like this, or through a configuration file or environment variables that are prefixed with `LAZYBOT_`.
+3. Build and run the bot!
+```
+cd dist
+./run.sh
+```
 
-### Storage
-LazyBot currently stores all information about installations and plugin data in `target/`. This will be changed and made configurable, too.
+4. Build something cool :)

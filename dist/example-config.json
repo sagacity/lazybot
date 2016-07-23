@@ -3,7 +3,7 @@
     "publicAddress": "https://354d3145.ngrok.io/"
   },
   "db": {
-    "folder": "."
+    "folder": "data"
   },
   "plugins": {
     "parameters": {
