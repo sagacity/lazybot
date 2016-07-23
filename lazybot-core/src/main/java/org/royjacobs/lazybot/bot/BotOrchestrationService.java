@@ -76,8 +76,6 @@ public class BotOrchestrationService implements Service {
         pluginProvider.get().forEach(plugin -> {
             allDescriptors.add(plugin.getDescriptor());
 
-            final Store<? extends PluginGlobalData> globalStore = storeFactory.get("plugindata-" + plugin.getDescriptor().getKey(), plugin.getDescriptor().getGlobalDataClass());
-
             final PluginContext.PluginContextBuilder pluginContextBuilder = PluginContext.builder()
                     .roomApi(roomApi)
                     .roomId(installation.getRoomId())
