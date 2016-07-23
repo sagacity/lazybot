@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.royjacobs.lazybot.bot.plugins.*;
 import org.royjacobs.lazybot.hipchat.client.RoomApi;
 import org.royjacobs.lazybot.hipchat.client.RoomApiFactory;
-import org.royjacobs.lazybot.hipchat.client.dto.RoomId;
 import org.royjacobs.lazybot.hipchat.installations.Installation;
 import org.royjacobs.lazybot.hipchat.installations.InstallationContext;
 import org.royjacobs.lazybot.hipchat.installations.InstalledPlugin;
@@ -22,6 +21,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Singleton
@@ -29,6 +29,7 @@ public class BotOrchestrationService implements Service {
     private final StoreFactory storeFactory;
     private final Provider<Set<Plugin>> pluginProvider;
     private final RoomApiFactory roomApiFactory;
+    private final CommandDispatcher commandDispatcher;
 
     private final Map<Installation, InstallationContext> activeInstallations;
     private final Store<Installation> storedInstallations;
@@ -37,11 +38,13 @@ public class BotOrchestrationService implements Service {
     public BotOrchestrationService(
             final StoreFactory storeFactory,
             final Provider<Set<Plugin>> pluginProvider,
-            final RoomApiFactory roomApiFactory
+            final RoomApiFactory roomApiFactory,
+            final CommandDispatcher commandDispatcher
     ) {
         this.storeFactory = storeFactory;
         this.pluginProvider = pluginProvider;
         this.roomApiFactory = roomApiFactory;
+        this.commandDispatcher = commandDispatcher;
         this.activeInstallations = new HashMap<>();
 
         storedInstallations = storeFactory.get("installations", Installation.class);
@@ -140,26 +143,12 @@ public class BotOrchestrationService implements Service {
                     .args(cmdLine.size() > 2 ? cmdLine.subList(2, cmdLine.size()) : Collections.emptyList())
                     .build();
 
-            for (InstalledPlugin plugin : context.getPlugins()) {
-                final PluginMessageHandlingResult result = plugin.getPlugin().onCommand(command);
-                switch (result) {
-                    case NOT_INTENDED_FOR_THIS_PLUGIN:
-                        continue;
-                    case SUCCESS:
-                    case BAD_REQUEST:
-                        return;
-                    case FAILURE:
-                        return;
-                }
+            final PluginMessageHandlingResult result = commandDispatcher.dispatch(context.getPlugins().stream().map(InstalledPlugin::getPlugin).collect(Collectors.toSet()), command);
+            switch (result) {
+                case BAD_REQUEST:
+                case FAILURE:
+                    log.error("Could not handle message (result: " + result + "): {}", message);
             }
-
-            // No plugin found that can handle this message, so let's give some help
-            for (InstalledPlugin plugin : context.getPlugins()) {
-                final PluginMessageHandlingResult result = plugin.getPlugin().onUnhandledCommand(command);
-                if (result == PluginMessageHandlingResult.SUCCESS) return;
-            }
-
-            log.error("Message not handled", message);
         });
     }
 

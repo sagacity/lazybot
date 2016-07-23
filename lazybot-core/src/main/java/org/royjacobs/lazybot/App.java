@@ -5,7 +5,7 @@ import org.royjacobs.lazybot.config.DatabaseConfig;
 import org.royjacobs.lazybot.config.HipChatConfig;
 import org.royjacobs.lazybot.config.modules.ClientModule;
 import org.royjacobs.lazybot.config.modules.DatabaseModule;
-import org.royjacobs.lazybot.config.modules.PluginModule;
+import org.royjacobs.lazybot.config.modules.BotModule;
 import org.royjacobs.lazybot.config.modules.ServerModule;
 import org.royjacobs.lazybot.hipchat.server.capabilities.GetCapabilitiesHandler;
 import org.royjacobs.lazybot.hipchat.server.install.InstallationHandler;
@@ -48,7 +48,7 @@ public class App {
                 .module(ClientModule.class)
                 .module(ServerModule.class)
                 .module(DatabaseModule.class)
-                .module(PluginModule.class)
+                .module(BotModule.class)
                 .bind(BotOrchestrationService.class)
         );
     }
