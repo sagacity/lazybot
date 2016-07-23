@@ -1,0 +1,16 @@
+{
+  "server": {
+    "publicAddress": "https://354d3145.ngrok.io/"
+  },
+  "db": {
+    "folder": "."
+  },
+  "plugins": {
+    "parameters": {
+      "weather": {
+        "city": "Utrecht",
+        "country": "NL"
+      }
+    }
+  }
+}

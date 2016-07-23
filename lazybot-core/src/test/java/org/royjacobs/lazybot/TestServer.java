@@ -9,7 +9,7 @@ import ratpack.test.ServerBackedApplicationUnderTest;
 public class TestServer extends ServerBackedApplicationUnderTest {
     @Override
     protected RatpackServer createServer() throws Exception {
-        return App.createServer();
+        return App.createServer(new String[]{});
     }
 
     @Override

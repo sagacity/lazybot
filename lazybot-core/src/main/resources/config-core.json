@@ -11,5 +11,7 @@
       "view_messages",
       "view_room"
     ]
+  },
+  "plugins": {
   }
 }

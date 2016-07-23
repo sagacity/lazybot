@@ -3,6 +3,7 @@ package org.royjacobs.lazybot;
 import org.royjacobs.lazybot.bot.BotOrchestrationService;
 import org.royjacobs.lazybot.config.DatabaseConfig;
 import org.royjacobs.lazybot.config.HipChatConfig;
+import org.royjacobs.lazybot.config.PluginConfig;
 import org.royjacobs.lazybot.config.modules.*;
 import org.royjacobs.lazybot.hipchat.server.capabilities.GetCapabilitiesHandler;
 import org.royjacobs.lazybot.hipchat.server.install.InstallationHandler;
@@ -16,6 +17,10 @@ import ratpack.registry.Registry;
 import ratpack.server.RatpackServer;
 import ratpack.server.ServerConfigBuilder;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import static org.royjacobs.lazybot.hipchat.server.Paths.PATH_CAPABILITIES;
 import static org.royjacobs.lazybot.hipchat.server.Paths.PATH_INSTALL;
 import static org.royjacobs.lazybot.hipchat.server.Paths.PATH_WEBHOOK_ROOM_MESSAGE;
@@ -23,13 +28,18 @@ import static org.royjacobs.lazybot.hipchat.server.Paths.PATH_WEBHOOK_ROOM_MESSA
 @Slf4j
 public class App {
     public static void main(String[] args) throws Exception {
-        final RatpackServer server = createServer();
+        if (args.length > 1) {
+            log.error("Please provide the location of a JSON config file on the command line, or leave empty.");
+            return;
+        }
+
+        final RatpackServer server = createServer(args);
         server.start();
     }
 
-    public static RatpackServer createServer() throws Exception {
+    public static RatpackServer createServer(String[] args) throws Exception {
         return RatpackServer.of(s -> s
-                .serverConfig(config())
+                .serverConfig(config(args))
                 .registry(registry())
                 .handlers(chain -> chain
                         .get(PATH_CAPABILITIES, GetCapabilitiesHandler.class)
@@ -51,12 +61,32 @@ public class App {
         );
     }
 
-    private static Action<ServerConfigBuilder> config() {
-        return c -> c
-                .json(Resources.getResource("config.json"))
+    private static Action<ServerConfigBuilder> config(String[] args) {
+        final Path baseDir = Paths.get("").toAbsolutePath();
+        log.info("Using baseDir: " + baseDir);
+
+        Action<ServerConfigBuilder> cfg = Action.from(c -> c
+                .baseDir(baseDir)
+                .json(Resources.getResource("config-core.json"))
+        );
+
+        if (args.length == 1) {
+            final String filename = args[0];
+            final Path configPath = Paths.get(baseDir.toString(), filename);
+            if (!Files.exists(configPath)) {
+                throw new UnsupportedOperationException("Could not find config file: " + configPath);
+            }
+            cfg = cfg.append(c -> c.json(configPath));
+        }
+
+        cfg = cfg.append(c -> c
                 .env("LAZYBOT_")
                 .sysProps("lazybot.")
                 .require("/hipchat", HipChatConfig.class)
-                .require("/db", DatabaseConfig.class);
+                .require("/db", DatabaseConfig.class)
+                .require("/plugins", PluginConfig.class)
+        );
+
+        return cfg;
     }
 }
