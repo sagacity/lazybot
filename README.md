@@ -1,3 +1,8 @@
+# LazyBot
+[![Build Status](https://travis-ci.org/RoyJacobs/lazybot.svg?branch=master)](https://travis-ci.org/RoyJacobs/lazybot)
+[![Code Coverage](http://codecov.io/github/RoyJacobs/lazybot/coverage.svg?branch=master)](http://codecov.io/github/RoyJacobs/lazybot?branch=master)
+[![License](http://img.shields.io/:license-mit-brightgreen.svg)](https://raw.githubusercontent.com/RoyJacobs/lazybot/master/LICENSE.md)
+
 ### Description
 
 **LazyBot** is a framework for building HipChat bots on the JVM. It comes with a bunch of (example) plugins that should give you a good idea on how to build your own plugins.
