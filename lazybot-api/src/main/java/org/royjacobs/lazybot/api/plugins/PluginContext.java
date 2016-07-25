@@ -4,8 +4,7 @@ import lombok.Builder;
 import lombok.Value;
 import org.royjacobs.lazybot.api.hipchat.RoomApi;
 import org.royjacobs.lazybot.api.store.Store;
-
-import java.util.Set;
+import rx.Observable;
 
 @Value
 @Builder
@@ -15,5 +14,6 @@ public class PluginContext {
     PluginConfigData configData;
     Store<? extends PluginRoomData> roomStore;
     Store<? extends PluginGlobalData> globalStore;
-    Set<PluginDescriptor> allDescriptors;
+    //Set<PluginDescriptor> allDescriptors;
+    Observable<PublicVariables> publicVariables;
 }

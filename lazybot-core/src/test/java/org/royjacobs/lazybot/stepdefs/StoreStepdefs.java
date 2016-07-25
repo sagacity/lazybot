@@ -7,9 +7,9 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.royjacobs.lazybot.api.store.Store;
 import org.royjacobs.lazybot.config.DatabaseConfig;
 import org.royjacobs.lazybot.store.PersistentStoreFactory;
-import org.royjacobs.lazybot.api.store.Store;
 import org.royjacobs.lazybot.store.StoreFactory;
 
 import java.util.Optional;

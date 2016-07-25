@@ -7,8 +7,6 @@ import org.royjacobs.lazybot.api.plugins.PluginContext;
 import org.royjacobs.lazybot.api.plugins.PluginDescriptor;
 import org.royjacobs.lazybot.api.plugins.PluginMessageHandlingResult;
 
-import java.util.stream.Collectors;
-
 public class HelpPlugin implements Plugin {
     private PluginContext context;
 
@@ -36,7 +34,8 @@ public class HelpPlugin implements Plugin {
 
     @Override
     public PluginMessageHandlingResult onUnhandledCommand(final Command command) {
-        final String commands = context.getAllDescriptors().stream().map(PluginDescriptor::getKey).collect(Collectors.joining(", "));
+        //final String commands = context.getAllDescriptors().stream().map(PluginDescriptor::getKey).collect(Collectors.joining(", "));
+        final String commands = "TODO";
 
         context.getRoomApi().sendNotification(new Notification("help", "text", "I can help you with the following commands: " + commands));
         return PluginMessageHandlingResult.SUCCESS;
