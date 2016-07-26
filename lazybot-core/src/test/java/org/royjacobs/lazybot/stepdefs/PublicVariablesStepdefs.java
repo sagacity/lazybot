@@ -3,6 +3,7 @@ package org.royjacobs.lazybot.stepdefs;
 import cucumber.api.java.After;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import cucumber.runtime.java.guice.ScenarioScoped;
 import org.royjacobs.lazybot.api.plugins.Plugin;
 import org.royjacobs.lazybot.api.plugins.PublicVariables;
 import org.royjacobs.lazybot.bot.VariableCombiner;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
+@ScenarioScoped
 public class PublicVariablesStepdefs {
     private final Set<TestPlugin> plugins;
     private VariableCombiner variableCombiner = new VariableCombiner();
