@@ -23,6 +23,15 @@ Feature: Bot Orchestration
     Then the plugins should have received an unregister call
     Then the installation store should be empty
 
+  Scenario: unregister a stopped installation
+    Given the following installations are registered
+      | oauthId | roomId |
+      | 1       | R1     |
+
+    When the "stop" event is received
+    And the registered installations are unregistered
+    Then the installation store should be empty
+
   Scenario: Register an installation through the server
     Given the following "installed information" coming in from HipChat
       | oauthId | oauthSecret | roomId |
