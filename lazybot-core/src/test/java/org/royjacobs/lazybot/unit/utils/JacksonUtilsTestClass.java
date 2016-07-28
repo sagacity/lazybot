@@ -1,4 +1,4 @@
-package org.royjacobs.lazybot.unit;
+package org.royjacobs.lazybot.unit.utils;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;

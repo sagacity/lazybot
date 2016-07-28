@@ -1,13 +1,12 @@
 package org.royjacobs.lazybot.hipchat.client;
 
-import org.royjacobs.lazybot.api.hipchat.RoomApi;
-import org.royjacobs.lazybot.api.domain.Notification;
-import org.royjacobs.lazybot.hipchat.installations.Installation;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
 import com.google.inject.assistedinject.Assisted;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
+import org.royjacobs.lazybot.api.domain.Notification;
+import org.royjacobs.lazybot.api.hipchat.RoomApi;
+import org.royjacobs.lazybot.hipchat.installations.Installation;
 import org.royjacobs.lazybot.utils.JacksonUtils;
 
 import javax.inject.Inject;
@@ -15,7 +14,6 @@ import java.io.IOException;
 
 @Slf4j
 public class RoomApiHttp implements RoomApi {
-    private final ObjectMapper objectMapper;
     private final OkHttpClient httpClient;
     private final OAuthApi oAuthApi;
     private final Installation installation;
@@ -23,11 +21,9 @@ public class RoomApiHttp implements RoomApi {
 
     @Inject
     public RoomApiHttp(
-            final ObjectMapper objectMapper,
             final OkHttpClient httpClient,
             final OAuthApi oAuthApi,
             @Assisted final Installation installation) {
-        this.objectMapper = objectMapper;
         this.httpClient = httpClient;
         this.oAuthApi = oAuthApi;
         this.installation = installation;
@@ -37,7 +33,7 @@ public class RoomApiHttp implements RoomApi {
     public void sendNotification(final Notification notification) {
         performRequest(new Request.Builder()
                 .url("https://api.hipchat.com/v2/room/" + installation.getRoomId() + "/notification")
-                .post(RequestBody.create(MediaType.parse("application/json"), JacksonUtils.serialize(objectMapper, notification))));
+                .post(RequestBody.create(MediaType.parse("application/json"), JacksonUtils.serialize(notification))));
     }
 
     private void performRequest(Request.Builder request) {

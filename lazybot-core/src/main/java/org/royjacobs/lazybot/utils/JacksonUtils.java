@@ -9,7 +9,9 @@ import java.io.IOException;
 
 @Slf4j
 public class JacksonUtils {
-    public static <T> String serialize(final ObjectMapper objectMapper, final T object) {
+    private static ObjectMapper objectMapper = new ObjectMapper();
+
+    public static <T> String serialize(final T object) {
         try {
             return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
@@ -18,7 +20,7 @@ public class JacksonUtils {
         }
     }
 
-    public static <T> T deserialize(final ObjectMapper objectMapper, final String json, final Class<T> type) {
+    public static <T> T deserialize(final String json, final Class<T> type) {
         try {
             return objectMapper.readValue(json, type);
         } catch (IOException e) {

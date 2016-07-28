@@ -1,6 +1,5 @@
 package org.royjacobs.lazybot.bot;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.royjacobs.lazybot.api.hipchat.RoomApi;
 import org.royjacobs.lazybot.api.plugins.Plugin;
@@ -18,19 +17,16 @@ import javax.inject.Inject;
 public class DefaultPluginContextBuilder implements PluginContextBuilder {
     private final PluginConfig pluginConfig;
     private final RoomApiFactory roomApiFactory;
-    private final ObjectMapper objectMapper;
     private final StoreFactory storeFactory;
 
     @Inject
     public DefaultPluginContextBuilder(
             PluginConfig pluginConfig,
             RoomApiFactory roomApiFactory,
-            ObjectMapper objectMapper,
             StoreFactory storeFactory
     ) {
         this.pluginConfig = pluginConfig;
         this.roomApiFactory = roomApiFactory;
-        this.objectMapper = objectMapper;
         this.storeFactory = storeFactory;
     }
 
@@ -47,8 +43,8 @@ public class DefaultPluginContextBuilder implements PluginContextBuilder {
 
         final Object pluginConfigurationData = pluginConfig.getParameters().get(plugin.getDescriptor().getKey());
         if (configDataClass != null && pluginConfigurationData != null) {
-            final String serialized = JacksonUtils.serialize(objectMapper, pluginConfigurationData);
-            final PluginConfigData deserialized = JacksonUtils.deserialize(objectMapper, serialized, configDataClass);
+            final String serialized = JacksonUtils.serialize(pluginConfigurationData);
+            final PluginConfigData deserialized = JacksonUtils.deserialize(serialized, configDataClass);
             pluginContextBuilder.configData(deserialized);
         }
 

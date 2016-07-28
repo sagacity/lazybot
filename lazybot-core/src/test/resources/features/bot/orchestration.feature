@@ -22,3 +22,24 @@ Feature: Bot Orchestration
     When the registered installations are unregistered
     Then the plugins should have received an unregister call
     Then the installation store should be empty
+
+  Scenario: Register an installation through the server
+    Given the following "installed information" coming in from HipChat
+      | oauthId | oauthSecret | roomId |
+      | 1       | S1          | R1     |
+
+    Then The following installations should be registered
+      | oauthId | oauthSecret | roomId |
+      | 1       | S1          | R1     |
+
+  Scenario: Unregister an installation through the server
+    Given the following installations are registered
+      | oauthId |
+      | 1       |
+      | 2       |
+
+    When there is an unregistration for oauthId 1 coming in from HipChat
+
+    Then The following installations should be registered
+      | oauthId |
+      | 2       |

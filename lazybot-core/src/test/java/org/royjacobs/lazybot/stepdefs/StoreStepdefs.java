@@ -1,6 +1,5 @@
 package org.royjacobs.lazybot.stepdefs;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -26,7 +25,7 @@ public class StoreStepdefs {
         String uppercased;
     }
 
-    private final StoreFactory storeFactory = new PersistentStoreFactory(new ObjectMapper(), getDatabaseConfig());
+    private final StoreFactory storeFactory = new PersistentStoreFactory(getDatabaseConfig());
 
     private DatabaseConfig getDatabaseConfig() {
         final DatabaseConfig cfg = new DatabaseConfig();

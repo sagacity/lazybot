@@ -1,7 +1,6 @@
 package org.royjacobs.lazybot.hipchat.client;
 
 import org.royjacobs.lazybot.config.HipChatConfig;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.royjacobs.lazybot.hipchat.client.dto.RequestTokenResponse;
 import org.royjacobs.lazybot.utils.JacksonUtils;
@@ -12,13 +11,11 @@ import java.io.IOException;
 import java.util.stream.Collectors;
 
 public class OAuthApiHttp implements OAuthApi {
-    private final ObjectMapper objectMapper;
     private final OkHttpClient httpClient;
     private final String scope;
 
     @Inject
-    public OAuthApiHttp(final ObjectMapper objectMapper, final OkHttpClient httpClient, final HipChatConfig hipChatConfig) {
-        this.objectMapper = objectMapper;
+    public OAuthApiHttp(final OkHttpClient httpClient, final HipChatConfig hipChatConfig) {
         this.httpClient = httpClient;
         this.scope = hipChatConfig.getScopes().stream().collect(Collectors.joining("+"));
     }
@@ -32,6 +29,6 @@ public class OAuthApiHttp implements OAuthApi {
                 .build();
 
         final Response response = httpClient.newCall(request).execute();
-        return JacksonUtils.deserialize(objectMapper, response.body().string(), RequestTokenResponse.class);
+        return JacksonUtils.deserialize(response.body().string(), RequestTokenResponse.class);
     }
 }

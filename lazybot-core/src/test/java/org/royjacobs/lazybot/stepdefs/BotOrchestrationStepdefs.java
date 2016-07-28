@@ -12,9 +12,13 @@ import org.royjacobs.lazybot.data.TestStore;
 import org.royjacobs.lazybot.hipchat.installations.Installation;
 import org.royjacobs.lazybot.hipchat.installations.InstallationContext;
 import org.royjacobs.lazybot.hipchat.installations.InstalledPlugin;
+import org.royjacobs.lazybot.hipchat.server.install.InstallationHandler;
+import org.royjacobs.lazybot.hipchat.server.install.dto.InstalledInformation;
+import org.royjacobs.lazybot.utils.JacksonUtils;
 import ratpack.registry.Registry;
 import ratpack.service.StartEvent;
 import ratpack.service.StopEvent;
+import ratpack.test.embed.EmbeddedApp;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,6 +69,37 @@ public class BotOrchestrationStepdefs {
     @Then("^the installation store should contain (\\d+) installations$")
     public void theInstallationStoreShouldContainInstallations(int numInstallations) {
         assertThat(store.findAll().size(), is(numInstallations));
+    }
+
+    @Given("^the following \"installed information\" coming in from HipChat$")
+    public void theFollowingInstalledInformationComingInFromHipChat(List<InstalledInformation> installedInformations) throws Exception {
+        for (InstalledInformation installedInformation : installedInformations) {
+            EmbeddedApp.fromHandlers(chain -> chain
+                    .register(r -> r.add(service))
+                    .post(new InstallationHandler())
+            )
+                    .test(client -> client.request(r -> r
+                            .body(b -> b.type("application/json").text(JacksonUtils.serialize(installedInformation)))
+                            .post()));
+        }
+    }
+
+    @Then("^The following installations should be registered$")
+    public void theFollowingInstallationsShouldBeRegistered(List<Installation> installations) throws Throwable {
+        for (Installation expected : installations) {
+            final Optional<Installation> actual = store.get(expected.getOauthId());
+            assertThat(actual.isPresent(), is(true));
+            assertThat(actual.get(), is(expected));
+        }
+    }
+
+    @When("^there is an unregistration for oauthId (\\S+) coming in from HipChat$")
+    public void thereIsAnUnregistrationForOauthIdComingInFromHipChat(String oauthId) throws Exception {
+        EmbeddedApp.fromHandlers(chain -> chain
+                .register(r -> r.add(service))
+                .delete(":oauthid", new InstallationHandler())
+        )
+                .test(client -> client.delete(oauthId));
     }
 
     private class FakeStartEvent implements StartEvent {

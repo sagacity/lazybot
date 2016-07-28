@@ -1,6 +1,5 @@
 package org.royjacobs.lazybot.store;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -18,13 +17,11 @@ import java.nio.file.Paths;
 
 @Slf4j
 public class PersistentStoreFactory implements StoreFactory {
-    private final ObjectMapper objectMapper;
     private final DatabaseConfig databaseConfig;
     private final Cache<String, Object> storeCache;
 
     @Inject
-    public PersistentStoreFactory(final ObjectMapper objectMapper, final DatabaseConfig databaseConfig) {
-        this.objectMapper = objectMapper;
+    public PersistentStoreFactory(final DatabaseConfig databaseConfig) {
         this.databaseConfig = databaseConfig;
         storeCache = CacheBuilder.newBuilder().maximumSize(10000).build();
     }
@@ -51,7 +48,7 @@ public class PersistentStoreFactory implements StoreFactory {
             throw Throwables.propagate(e);
         }
 
-        final Store<T> store = new JacksonStore<>(objectMapper, map, clazz);
+        final Store<T> store = new JacksonStore<>(map, clazz);
         storeCache.put(key, store);
         return store;
     }
