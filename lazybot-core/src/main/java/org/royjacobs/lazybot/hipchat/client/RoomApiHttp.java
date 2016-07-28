@@ -11,7 +11,6 @@ import org.royjacobs.lazybot.hipchat.installations.Installation;
 import org.royjacobs.lazybot.utils.JacksonUtils;
 
 import javax.inject.Inject;
-import java.io.IOException;
 
 @Slf4j
 public class RoomApiHttp implements RoomApi {
@@ -54,10 +53,12 @@ public class RoomApiHttp implements RoomApi {
 
                 // 401 means the OAuth may be invalid, so let's refresh it
                 if (response.code() == 401) token = null;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 log.error("Could not perform call", e);
             }
         }
+
+        throw new RuntimeException("Could not perform call after retrying");
     }
 
     private String refreshOAuthToken() {
