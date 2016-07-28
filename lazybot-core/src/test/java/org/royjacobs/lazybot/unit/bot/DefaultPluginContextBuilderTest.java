@@ -53,6 +53,11 @@ public class DefaultPluginContextBuilderTest {
         assertThat(((TestPluginGlobalData)context2.getGlobalStore().get("key").get()).getData(), is("value2"));
     }
 
+    @Test
+    public void canBuildPluginWithoutConfigOrStorage() {
+        getBuilder().buildContext(new TestPlugin("empty"), Installation.builder().roomId("R1").build());
+    }
+
     private DefaultPluginContextBuilder getBuilder() {
         return new DefaultPluginContextBuilder(pluginConfig, installation -> roomApi, storeFactory);
     }

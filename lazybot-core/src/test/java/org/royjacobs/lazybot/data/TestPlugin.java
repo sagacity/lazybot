@@ -22,13 +22,18 @@ public class TestPlugin implements Plugin {
 
     @Override
     public PluginDescriptor getDescriptor() {
-        return PluginDescriptor.builder()
+        final PluginDescriptor.PluginDescriptorBuilder builder = PluginDescriptor.builder()
                 .key(key)
-                .publicVariables(publicVariables)
-                .configDataClass(TestPluginConfigData.class)
-                .roomDataClass(TestPluginRoomData.class)
-                .globalDataClass(TestPluginGlobalData.class)
-                .build();
+                .publicVariables(publicVariables);
+
+        if (!key.equalsIgnoreCase("empty")) {
+            builder
+                    .configDataClass(TestPluginConfigData.class)
+                    .roomDataClass(TestPluginRoomData.class)
+                    .globalDataClass(TestPluginGlobalData.class);
+        }
+
+        return builder.build();
     }
 
     @Override
