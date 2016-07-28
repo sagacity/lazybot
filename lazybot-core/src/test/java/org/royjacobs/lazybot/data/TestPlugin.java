@@ -25,6 +25,9 @@ public class TestPlugin implements Plugin {
         return PluginDescriptor.builder()
                 .key(key)
                 .publicVariables(publicVariables)
+                .configDataClass(TestPluginConfigData.class)
+                .roomDataClass(TestPluginRoomData.class)
+                .globalDataClass(TestPluginGlobalData.class)
                 .build();
     }
 

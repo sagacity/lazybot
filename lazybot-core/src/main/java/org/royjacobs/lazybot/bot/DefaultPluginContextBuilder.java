@@ -2,9 +2,7 @@ package org.royjacobs.lazybot.bot;
 
 import lombok.extern.slf4j.Slf4j;
 import org.royjacobs.lazybot.api.hipchat.RoomApi;
-import org.royjacobs.lazybot.api.plugins.Plugin;
-import org.royjacobs.lazybot.api.plugins.PluginConfigData;
-import org.royjacobs.lazybot.api.plugins.PluginContext;
+import org.royjacobs.lazybot.api.plugins.*;
 import org.royjacobs.lazybot.config.PluginConfig;
 import org.royjacobs.lazybot.hipchat.client.RoomApiFactory;
 import org.royjacobs.lazybot.hipchat.installations.Installation;
@@ -49,11 +47,11 @@ public class DefaultPluginContextBuilder implements PluginContextBuilder {
         }
 
         if (plugin.getDescriptor().getRoomDataClass() != null) {
-            pluginContextBuilder.roomStore(storeFactory.get("plugindata-" + plugin.getDescriptor().getKey() + "-room-" + installation.getRoomId(), plugin.getDescriptor().getRoomDataClass()));
+            pluginContextBuilder.roomStore(storeFactory.get("plugindata-" + plugin.getDescriptor().getKey() + "-room-" + installation.getRoomId(), (Class<PluginRoomData>)plugin.getDescriptor().getRoomDataClass()));
         }
 
         if (plugin.getDescriptor().getGlobalDataClass() != null) {
-            pluginContextBuilder.globalStore(storeFactory.get("plugindata-" + plugin.getDescriptor().getKey() + "-global", plugin.getDescriptor().getGlobalDataClass()));
+            pluginContextBuilder.globalStore(storeFactory.get("plugindata-" + plugin.getDescriptor().getKey() + "-global", (Class<PluginGlobalData>)plugin.getDescriptor().getGlobalDataClass()));
         }
 
         return pluginContextBuilder.build();

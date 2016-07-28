@@ -12,8 +12,8 @@ public class PluginContext {
     RoomApi roomApi;
     String roomId;
     PluginConfigData configData;
-    Store<? extends PluginRoomData> roomStore;
-    Store<? extends PluginGlobalData> globalStore;
+    Store<PluginRoomData> roomStore;
+    Store<PluginGlobalData> globalStore;
     //Set<PluginDescriptor> allDescriptors;
     Observable<PublicVariables> publicVariables;
 }
