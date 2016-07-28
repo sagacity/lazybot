@@ -22,4 +22,11 @@ To quickly start playing with a bot, I suggest you use [ngrok](https://ngrok.com
    ./run.sh
    ```
 
-4. Build something cool :)
+4. On the HipChat integrations page, choose "Install an integration from a descriptor URL"
+
+5. Enter the following url:
+   ```
+   https://<address of your server>/capabilities
+   ```
+
+6. Profit!
