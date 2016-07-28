@@ -10,7 +10,7 @@ import static org.royjacobs.lazybot.api.plugins.PluginMessageHandlingResult.*;
 
 public class DefaultCommandDispatcher implements CommandDispatcher {
     @Override
-    public PluginMessageHandlingResult dispatch(final Set<Plugin> plugins, Command command) {
+    public PluginMessageHandlingResult dispatch(final String roomId, final Set<Plugin> plugins, Command command) {
         for (Plugin plugin : plugins) {
             final PluginMessageHandlingResult result = plugin.onCommand(command);
             switch (result) {

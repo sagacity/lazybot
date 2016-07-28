@@ -2,6 +2,8 @@ package org.royjacobs.lazybot.config.modules;
 
 import org.royjacobs.lazybot.hipchat.server.capabilities.GetCapabilitiesHandler;
 import org.royjacobs.lazybot.hipchat.server.install.InstallationHandler;
+import org.royjacobs.lazybot.hipchat.server.validator.HipChatRequestValidator;
+import org.royjacobs.lazybot.hipchat.server.validator.JwtRequestValidator;
 import org.royjacobs.lazybot.hipchat.server.webhooks.RoomMessageHandler;
 import com.google.inject.AbstractModule;
 
@@ -11,5 +13,6 @@ public class ServerModule extends AbstractModule {
         bind(GetCapabilitiesHandler.class);
         bind(InstallationHandler.class);
         bind(RoomMessageHandler.class);
+        bind(HipChatRequestValidator.class).to(JwtRequestValidator.class);
     }
 }

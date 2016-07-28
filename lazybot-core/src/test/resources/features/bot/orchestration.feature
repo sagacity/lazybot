@@ -2,9 +2,9 @@ Feature: Bot Orchestration
 
   Scenario: Service start and stop
     Given the following installations are registered
-    | oauthId | roomId |
-    | 1       | R1     |
-    | 2       | R2     |
+      | oauthId | roomId |
+      | 1       | R1     |
+      | 2       | R2     |
     Then the installation store should contain 2 installations
 
     When the "start" event is received
@@ -43,3 +43,18 @@ Feature: Bot Orchestration
     Then The following installations should be registered
       | oauthId |
       | 2       |
+
+  Scenario: incoming message
+    Given the following installations are registered
+      | oauthId | roomId |
+      | 1       | R1     |
+      | 2       | R2     |
+    And the "start" event is received
+
+    When the following messages come in from HipChat
+      | oauthId | message |
+      | 1       | /lazybot Hello   |
+
+    Then the following commands are dispatched
+      | roomId | command |
+      | R1     | Hello   |

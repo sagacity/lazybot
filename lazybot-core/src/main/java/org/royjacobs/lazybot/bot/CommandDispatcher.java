@@ -7,5 +7,5 @@ import org.royjacobs.lazybot.api.plugins.PluginMessageHandlingResult;
 import java.util.Set;
 
 public interface CommandDispatcher {
-    PluginMessageHandlingResult dispatch(final Set<Plugin> plugins, final Command command);
+    PluginMessageHandlingResult dispatch(final String roomId, final Set<Plugin> plugins, final Command command);
 }

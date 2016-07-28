@@ -135,7 +135,7 @@ public class BotOrchestrationService implements Service {
                     .args(cmdLine.size() > 2 ? cmdLine.subList(2, cmdLine.size()) : Collections.emptyList())
                     .build();
 
-            final PluginMessageHandlingResult result = commandDispatcher.dispatch(context.getPlugins().stream().map(InstalledPlugin::getPlugin).collect(Collectors.toSet()), command);
+            final PluginMessageHandlingResult result = commandDispatcher.dispatch(installation.getRoomId(), context.getPlugins().stream().map(InstalledPlugin::getPlugin).collect(Collectors.toSet()), command);
             switch (result) {
                 case BAD_REQUEST:
                 case FAILURE:

@@ -4,17 +4,22 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import lombok.Data;
+import org.royjacobs.lazybot.api.domain.Command;
+import org.royjacobs.lazybot.api.domain.RoomMessage;
+import org.royjacobs.lazybot.api.domain.RoomMessageItem;
+import org.royjacobs.lazybot.api.domain.RoomMessageItemData;
 import org.royjacobs.lazybot.bot.BotOrchestrationService;
-import org.royjacobs.lazybot.data.TestPlugin;
-import org.royjacobs.lazybot.data.TestPluginContextBuilder;
-import org.royjacobs.lazybot.data.TestPluginProvider;
-import org.royjacobs.lazybot.data.TestStore;
+import org.royjacobs.lazybot.data.*;
 import org.royjacobs.lazybot.hipchat.installations.Installation;
 import org.royjacobs.lazybot.hipchat.installations.InstallationContext;
 import org.royjacobs.lazybot.hipchat.installations.InstalledPlugin;
 import org.royjacobs.lazybot.hipchat.server.install.InstallationHandler;
 import org.royjacobs.lazybot.hipchat.server.install.dto.InstalledInformation;
+import org.royjacobs.lazybot.hipchat.server.validator.HipChatRequestValidator;
+import org.royjacobs.lazybot.hipchat.server.webhooks.RoomMessageHandler;
 import org.royjacobs.lazybot.utils.JacksonUtils;
+import ratpack.http.Request;
 import ratpack.registry.Registry;
 import ratpack.service.StartEvent;
 import ratpack.service.StopEvent;
@@ -32,6 +37,7 @@ public class BotOrchestrationStepdefs {
     private TestPluginContextBuilder pluginContextBuilder;
     private TestPluginProvider pluginProvider;
     private TestStore<Installation> store;
+    private TestCommandDispatcher commandDispatcher;
 
     private BotOrchestrationService service;
     private List<Installation> givenInstallations;
@@ -41,12 +47,13 @@ public class BotOrchestrationStepdefs {
         pluginContextBuilder = new TestPluginContextBuilder();
         pluginProvider = new TestPluginProvider(() -> new TestPlugin("foo"), () -> new TestPlugin("bar"));
         store = new TestStore<>();
+        commandDispatcher = new TestCommandDispatcher();
 
         service = new BotOrchestrationService(
                 pluginContextBuilder,
                 store,
                 pluginProvider,
-                (plugins1, command) -> null
+                commandDispatcher
         );
     }
 
@@ -87,7 +94,7 @@ public class BotOrchestrationStepdefs {
     @Then("^The following installations should be registered$")
     public void theFollowingInstallationsShouldBeRegistered(List<Installation> installations) throws Throwable {
         assertThat(store.findAll().size(), is(installations.size()));
-        
+
         for (Installation expected : installations) {
             final Optional<Installation> actual = store.get(expected.getOauthId());
             assertThat(actual.isPresent(), is(true));
@@ -102,6 +109,57 @@ public class BotOrchestrationStepdefs {
                 .delete(":oauthid", new InstallationHandler())
         )
                 .test(client -> client.delete(oauthId));
+    }
+
+    @Data
+    private class CucumberRoomMessage {
+        private String oauthId;
+        private String message;
+    }
+
+    @When("^the following messages come in from HipChat$")
+    public void theFollowingMessagesComeInFromHipChat(List<CucumberRoomMessage> messages) throws Throwable {
+        for (CucumberRoomMessage message : messages) {
+            final RoomMessage roomMessage = new RoomMessage();
+            final RoomMessageItem roomMessageItem = new RoomMessageItem();
+            final RoomMessageItemData roomMessageItemData = new RoomMessageItemData();
+
+            roomMessage.setOauthId(message.getOauthId());
+
+            roomMessageItemData.setMessage(message.getMessage());
+            roomMessageItem.setMessage(roomMessageItemData);
+            roomMessage.setItem(roomMessageItem);
+
+            EmbeddedApp.fromHandlers(chain -> chain
+                    .register(r -> r.add(service))
+                    .register(r -> r.add(new HipChatRequestValidator() {
+                        @Override
+                        public void validate(Request request, String oauthSecret) {
+                        }
+                    }))
+                    .post(new RoomMessageHandler())
+            )
+                    .test(client -> client.request(r -> r
+                            .body(b -> b.type("application/json").text(JacksonUtils.serialize(roomMessage)))
+                            .post()));
+        }
+    }
+
+    @Data
+    private class CucumberCommand {
+        private String roomId;
+        private String command;
+    }
+
+    @Then("^the following commands are dispatched$")
+    public void theFollowingCommandsAreDispatched(List<CucumberCommand> commands) {
+        for (CucumberCommand expected : commands) {
+            final List<Command> commandsForRoom = commandDispatcher.getDispatchedCommands().get(expected.getRoomId());
+            final Optional<String> actual = commandsForRoom.stream().map(Command::getCommand).findFirst();
+
+            assertThat(actual.isPresent(), is(true));
+            assertThat(actual.get(), is(expected.getCommand()));
+        }
     }
 
     private class FakeStartEvent implements StartEvent {
