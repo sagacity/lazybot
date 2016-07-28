@@ -1,6 +1,6 @@
 package org.royjacobs.lazybot.stepdefs;
 
-import cucumber.api.java.Before;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -9,6 +9,7 @@ import org.royjacobs.lazybot.api.domain.Command;
 import org.royjacobs.lazybot.api.domain.RoomMessage;
 import org.royjacobs.lazybot.api.domain.RoomMessageItem;
 import org.royjacobs.lazybot.api.domain.RoomMessageItemData;
+import org.royjacobs.lazybot.api.plugins.PluginContext;
 import org.royjacobs.lazybot.bot.BotOrchestrationService;
 import org.royjacobs.lazybot.data.*;
 import org.royjacobs.lazybot.hipchat.installations.Installation;
@@ -34,28 +35,23 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 public class BotOrchestrationStepdefs {
-    private TestPluginContextBuilder pluginContextBuilder;
-    private TestPluginProvider pluginProvider;
-    private TestStore<Installation> store;
-    private TestCommandDispatcher commandDispatcher;
+    private TestPluginContextBuilder pluginContextBuilder = new TestPluginContextBuilder();
+    private TestPluginProvider pluginProvider = new TestPluginProvider(() -> new TestPlugin("foo"), () -> new TestPlugin("bar"));
+    private TestStore<Installation> store = new TestStore<>();
+    private TestCommandDispatcher commandDispatcher = new TestCommandDispatcher();
 
-    private BotOrchestrationService service;
-    private List<Installation> givenInstallations;
+    private BotOrchestrationService service = createService();
 
-    @Before
-    public void before() {
-        pluginContextBuilder = new TestPluginContextBuilder();
-        pluginProvider = new TestPluginProvider(() -> new TestPlugin("foo"), () -> new TestPlugin("bar"));
-        store = new TestStore<>();
-        commandDispatcher = new TestCommandDispatcher();
-
-        service = new BotOrchestrationService(
+    private BotOrchestrationService createService() {
+        return new BotOrchestrationService(
                 pluginContextBuilder,
                 store,
                 pluginProvider,
                 commandDispatcher
         );
     }
+
+    private List<Installation> givenInstallations;
 
     @Given("^the following installations are registered$")
     public void theFollowingInstallationsAreRegistered(List<Installation> installations) throws IOException {
@@ -109,6 +105,31 @@ public class BotOrchestrationStepdefs {
                 .delete(":oauthid", new InstallationHandler())
         )
                 .test(client -> client.delete(oauthId));
+    }
+
+    @And("^plugin \"foo\" is broken$")
+    public void pluginIsBroken() {
+        class CannotStartPlugin extends TestPlugin {
+            private CannotStartPlugin(String key) {
+                super(key);
+            }
+
+            @Override
+            public void onStart(PluginContext context) {
+                throw new UnsupportedOperationException();
+            }
+        }
+
+        // Replace plugin provider
+        pluginProvider = new TestPluginProvider(() -> new CannotStartPlugin("foo"), () -> new TestPlugin("bar"));
+        service = createService();
+    }
+
+    @And("^every installation should contain (\\d+) plugin$")
+    public void everyInstallationShouldContainPlugin(int pluginCount) {
+        for (Installation installation : store.findAll()) {
+            assertThat(service.getContext(installation).getPlugins().size(), is(pluginCount));
+        }
     }
 
     @Data

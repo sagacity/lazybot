@@ -19,7 +19,6 @@ import ratpack.service.StopEvent;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,22 +47,16 @@ public class BotOrchestrationService implements Service {
         activeInstallations = new HashMap<>();
     }
 
-    public void onStart(final StartEvent event) throws IOException {
-        for (Installation installation : storedInstallations.findAll()) {
-            try {
-                startInstallation(installation);
-            } catch (Exception e) {
-                log.error("Could not start installation for room: " + installation.getRoomId(), e);
-            }
-        }
+    public void onStart(final StartEvent event) {
+        storedInstallations.findAll().forEach(this::startInstallation);
     }
 
-    public void registerInstallation(final Installation installation) throws IOException {
+    public void registerInstallation(final Installation installation) {
         storedInstallations.save(installation.getOauthId(), installation);
         startInstallation(installation);
     }
 
-    private void startInstallation(final Installation installation) throws IOException {
+    private void startInstallation(final Installation installation) {
         if (activeInstallations.containsKey(installation)) {
             log.info("Skipping installation (was already started): " + installation);
             return;
@@ -75,14 +68,18 @@ public class BotOrchestrationService implements Service {
                 .builder();
 
         pluginProvider.get().forEach(plugin -> {
-            final PluginContext pluginContext = pluginContextBuilder.buildContext(plugin, installation);
-            plugin.onStart(pluginContext);
+            try {
+                final PluginContext pluginContext = pluginContextBuilder.buildContext(plugin, installation);
+                plugin.onStart(pluginContext);
 
-            final InstalledPlugin installedPlugin = InstalledPlugin.builder()
-                    .plugin(plugin)
-                    .context(pluginContext)
-                    .build();
-            builder.plugin(installedPlugin);
+                final InstalledPlugin installedPlugin = InstalledPlugin.builder()
+                        .plugin(plugin)
+                        .context(pluginContext)
+                        .build();
+                builder.plugin(installedPlugin);
+            } catch (Exception e) {
+                log.warn("Could not add plugin '" + plugin.getDescriptor().getKey() + "' to installation", e);
+            }
         });
 
         log.info("Installation complete");

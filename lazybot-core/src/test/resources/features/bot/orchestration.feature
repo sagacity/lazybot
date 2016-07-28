@@ -58,3 +58,12 @@ Feature: Bot Orchestration
     Then the following commands are dispatched
       | roomId | command |
       | R1     | Hello   |
+
+    Scenario: start and stop with broken plugin
+      Given plugin "foo" is broken
+      And the following installations are registered
+        | oauthId | roomId |
+        | 1       | R1     |
+        | 2       | R2     |
+      Then the installation store should contain 2 installations
+      And every installation should contain 1 plugin
