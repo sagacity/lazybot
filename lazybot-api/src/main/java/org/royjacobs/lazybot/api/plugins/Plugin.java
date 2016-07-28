@@ -6,7 +6,7 @@ public interface Plugin {
     PluginDescriptor getDescriptor();
 
     void onStart(final PluginContext context);
-    void onStop(final boolean removed);
+    void onStop(final boolean unregistered);
 
     PluginMessageHandlingResult onCommand(final Command command);
     default PluginMessageHandlingResult onUnhandledCommand(final Command command) {

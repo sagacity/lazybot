@@ -25,7 +25,7 @@ public class EodPlugin implements Plugin {
     }
 
     @Override
-    public void onStop(final boolean removed) {
+    public void onStop(final boolean unregistered) {
     }
 
     @Override

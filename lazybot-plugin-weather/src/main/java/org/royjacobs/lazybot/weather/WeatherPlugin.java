@@ -25,7 +25,7 @@ public class WeatherPlugin implements Plugin {
         configData = (WeatherConfigData)context.getConfigData();
     }
 
-    public void onStop(boolean removed) {
+    public void onStop(boolean unregistered) {
 
     }
 

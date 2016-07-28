@@ -12,7 +12,6 @@ import org.royjacobs.lazybot.api.store.Store;
 import org.royjacobs.lazybot.hipchat.installations.Installation;
 import org.royjacobs.lazybot.hipchat.installations.InstallationContext;
 import org.royjacobs.lazybot.hipchat.installations.InstalledPlugin;
-import org.royjacobs.lazybot.store.StoreFactory;
 import ratpack.service.Service;
 import ratpack.service.StartEvent;
 import ratpack.service.StopEvent;
@@ -37,16 +36,16 @@ public class BotOrchestrationService implements Service {
     @Inject
     public BotOrchestrationService(
             final PluginContextBuilder pluginContextBuilder,
-            final StoreFactory storeFactory,
+            final Store<Installation> storedInstallations,
             final Provider<Set<Plugin>> pluginProvider,
             final CommandDispatcher commandDispatcher
             ) {
         this.pluginContextBuilder = pluginContextBuilder;
+        this.storedInstallations = storedInstallations;
         this.pluginProvider = pluginProvider;
         this.commandDispatcher = commandDispatcher;
-        this.activeInstallations = new HashMap<>();
 
-        storedInstallations = storeFactory.get("installations", Installation.class);
+        activeInstallations = new HashMap<>();
     }
 
     public void onStart(final StartEvent event) throws IOException {
@@ -59,12 +58,21 @@ public class BotOrchestrationService implements Service {
         }
     }
 
-    public void startInstallation(final Installation installation) throws IOException {
+    public void registerInstallation(final Installation installation) throws IOException {
+        storedInstallations.save(installation.getOauthId(), installation);
+        startInstallation(installation);
+    }
+
+    private void startInstallation(final Installation installation) throws IOException {
+        if (activeInstallations.containsKey(installation)) {
+            log.info("Skipping installation (was already started): " + installation);
+            return;
+        }
+
         log.info("Starting installation: " + installation);
 
         final InstallationContext.InstallationContextBuilder builder = InstallationContext
-                .builder()
-                .installation(installation);
+                .builder();
 
         pluginProvider.get().forEach(plugin -> {
             final PluginContext pluginContext = pluginContextBuilder.buildContext(plugin, installation);
@@ -88,10 +96,14 @@ public class BotOrchestrationService implements Service {
                 plugin.getPlugin().onStop(false);
             }
         }
+
+        activeInstallations.clear();
     }
 
-    public void removeInstallation(final String oauthId) {
-        getInstallationByOauthId(oauthId).ifPresent(context -> {
+    public void unregisterInstallation(final Installation installation) {
+        final InstallationContext context = getContext(installation);
+
+        if (context != null) { // not stopped yet
             for (InstalledPlugin plugin : context.getPlugins()) {
                 // Remove context and clear any data
                 plugin.getContext().getRoomStore().clearAll();
@@ -100,12 +112,16 @@ public class BotOrchestrationService implements Service {
                 plugin.getPlugin().onStop(true);
             }
 
-            removeInstallationByOauthId(oauthId);
-        });
+            activeInstallations.remove(installation);
+        }
+
+        storedInstallations.delete(installation.getOauthId());
     }
 
     public void onRoomMessage(final RoomMessage message) {
-        getInstallationByOauthId(message.getOauthId()).ifPresent(context -> {
+        getActiveInstallationByOauthId(message.getOauthId()).ifPresent(installation -> {
+            final InstallationContext context = getContext(installation);
+
             final List<String> cmdLine = Splitter.on(CharMatcher.WHITESPACE)
                     .trimResults()
                     .omitEmptyStrings()
@@ -128,11 +144,11 @@ public class BotOrchestrationService implements Service {
         });
     }
 
-    public Optional<InstallationContext> getInstallationByOauthId(String oauthId) {
-        return activeInstallations.entrySet().stream().filter(kv -> Objects.equals(kv.getKey().getOauthId(), oauthId)).map(Map.Entry::getValue).findFirst();
+    public Optional<Installation> getActiveInstallationByOauthId(String oauthId) {
+        return activeInstallations.keySet().stream().filter(i -> i.getOauthId().equals(oauthId)).findFirst();
     }
 
-    private void removeInstallationByOauthId(String oauthId) {
-        activeInstallations.entrySet().stream().filter(kv -> Objects.equals(kv.getKey().getOauthId(), oauthId)).map(Map.Entry::getKey).findFirst().ifPresent(activeInstallations::remove);
+    public InstallationContext getContext(Installation installation) {
+        return activeInstallations.get(installation);
     }
 }

@@ -5,7 +5,6 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import cucumber.runtime.java.guice.ScenarioScoped;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.royjacobs.lazybot.api.store.Store;
@@ -19,7 +18,6 @@ import static java.lang.System.getProperty;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-@ScenarioScoped
 public class StoreStepdefs {
     @Data
     @NoArgsConstructor

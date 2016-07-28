@@ -97,12 +97,12 @@
             <version>1.2.4</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <!--<dependency>
         	<groupId>info.cukes</groupId>
         	<artifactId>cucumber-guice</artifactId>
         	<version>1.2.4</version>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>io.ratpack</groupId>
             <artifactId>ratpack-test</artifactId>

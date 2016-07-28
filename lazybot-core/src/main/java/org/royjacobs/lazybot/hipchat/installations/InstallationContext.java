@@ -9,8 +9,6 @@ import java.util.Set;
 @Value
 @Builder
 public class InstallationContext {
-    private Installation installation;
-
     @Singular
     private Set<InstalledPlugin> plugins;
 }

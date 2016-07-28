@@ -23,7 +23,7 @@ public class HelpPlugin implements Plugin {
     }
 
     @Override
-    public void onStop(boolean removed) {
+    public void onStop(boolean unregistered) {
 
     }
 
