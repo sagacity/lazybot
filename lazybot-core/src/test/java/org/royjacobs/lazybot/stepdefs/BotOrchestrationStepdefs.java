@@ -86,6 +86,8 @@ public class BotOrchestrationStepdefs {
 
     @Then("^The following installations should be registered$")
     public void theFollowingInstallationsShouldBeRegistered(List<Installation> installations) throws Throwable {
+        assertThat(store.findAll().size(), is(installations.size()));
+        
         for (Installation expected : installations) {
             final Optional<Installation> actual = store.get(expected.getOauthId());
             assertThat(actual.isPresent(), is(true));
