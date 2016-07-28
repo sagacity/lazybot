@@ -12,11 +12,13 @@ import java.util.stream.Collectors;
 
 public class OAuthApiHttp implements OAuthApi {
     private final OkHttpClient httpClient;
+    private final HipChatConfig hipChatConfig;
     private final String scope;
 
     @Inject
     public OAuthApiHttp(final OkHttpClient httpClient, final HipChatConfig hipChatConfig) {
         this.httpClient = httpClient;
+        this.hipChatConfig = hipChatConfig;
         this.scope = hipChatConfig.getScopes().stream().collect(Collectors.joining("+"));
     }
 
@@ -24,7 +26,7 @@ public class OAuthApiHttp implements OAuthApi {
     public RequestTokenResponse requestToken(final String oauthId, final String oauthSecret) throws IOException {
         final Request request = new Request.Builder()
                 .header("Authorization", Credentials.basic(oauthId, oauthSecret))
-                .url("https://api.hipchat.com/v2/oauth/token")
+                .url(hipChatConfig.getRequestTokenUrl())
                 .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"), "grant_type=client_credentials&scope=" + scope))
                 .build();
 

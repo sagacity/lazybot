@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.royjacobs.lazybot.api.domain.Notification;
 import org.royjacobs.lazybot.api.hipchat.RoomApi;
+import org.royjacobs.lazybot.config.HipChatConfig;
 import org.royjacobs.lazybot.hipchat.installations.Installation;
 import org.royjacobs.lazybot.utils.JacksonUtils;
 
@@ -15,6 +16,7 @@ import java.io.IOException;
 @Slf4j
 public class RoomApiHttp implements RoomApi {
     private final OkHttpClient httpClient;
+    private final HipChatConfig hipChatConfig;
     private final OAuthApi oAuthApi;
     private final Installation installation;
     private String token;
@@ -22,9 +24,11 @@ public class RoomApiHttp implements RoomApi {
     @Inject
     public RoomApiHttp(
             final OkHttpClient httpClient,
+            final HipChatConfig hipChatConfig,
             final OAuthApi oAuthApi,
             @Assisted final Installation installation) {
         this.httpClient = httpClient;
+        this.hipChatConfig = hipChatConfig;
         this.oAuthApi = oAuthApi;
         this.installation = installation;
     }
@@ -32,7 +36,7 @@ public class RoomApiHttp implements RoomApi {
     @Override
     public void sendNotification(final Notification notification) {
         performRequest(new Request.Builder()
-                .url("https://api.hipchat.com/v2/room/" + installation.getRoomId() + "/notification")
+                .url(hipChatConfig.getRoomUrl(installation.getRoomId()) + "/notification")
                 .post(RequestBody.create(MediaType.parse("application/json"), JacksonUtils.serialize(notification))));
     }
 
