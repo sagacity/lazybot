@@ -8,7 +8,6 @@ import lombok.Data;
 import org.royjacobs.lazybot.api.domain.RoomMessage;
 import org.royjacobs.lazybot.api.domain.RoomMessageItem;
 import org.royjacobs.lazybot.api.domain.RoomMessageItemData;
-import org.royjacobs.lazybot.api.plugins.PluginContext;
 import org.royjacobs.lazybot.bot.BotOrchestrationService;
 import org.royjacobs.lazybot.data.*;
 import org.royjacobs.lazybot.hipchat.installations.Installation;
@@ -108,17 +107,6 @@ public class BotOrchestrationStepdefs {
 
     @And("^plugin \"foo\" is broken$")
     public void pluginIsBroken() {
-        class CannotStartPlugin extends TestPlugin {
-            private CannotStartPlugin(String key) {
-                super(key);
-            }
-
-            @Override
-            public void onStart(PluginContext context) {
-                throw new UnsupportedOperationException();
-            }
-        }
-
         // Replace plugin provider
         pluginProvider = new TestPluginProvider(() -> new CannotStartPlugin("foo"), () -> new TestPlugin("bar"));
         service = createService();

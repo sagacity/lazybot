@@ -16,6 +16,11 @@ public class TestPlugin implements Plugin {
     @Getter
     private boolean unregistered;
 
+    // To be compatible with Guice
+    public TestPlugin() {
+        key = "unknown";
+    }
+
     public TestPlugin(String key) {
         this.key = key;
     }
