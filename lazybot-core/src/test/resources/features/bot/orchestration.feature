@@ -52,18 +52,18 @@ Feature: Bot Orchestration
     And the "start" event is received
 
     When the following messages come in from HipChat
-      | oauthId | message |
-      | 1       | /lazybot Hello   |
+      | oauthId | message        |
+      | 1       | /lazybot Hello |
 
-    Then the following commands are dispatched
-      | roomId | command |
-      | R1     | Hello   |
+    Then the following messages are dispatched
+      | roomId | message        |
+      | R1     | /lazybot Hello |
 
-    Scenario: start and stop with broken plugin
-      Given plugin "foo" is broken
-      And the following installations are registered
-        | oauthId | roomId |
-        | 1       | R1     |
-        | 2       | R2     |
-      Then the installation store should contain 2 installations
-      And every installation should contain 1 plugin
+  Scenario: start and stop with broken plugin
+    Given plugin "foo" is broken
+    And the following installations are registered
+      | oauthId | roomId |
+      | 1       | R1     |
+      | 2       | R2     |
+    Then the installation store should contain 2 installations
+    And every installation should contain 1 plugin

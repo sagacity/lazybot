@@ -1,26 +1,22 @@
 package org.royjacobs.lazybot.data;
 
-import org.royjacobs.lazybot.api.domain.Command;
+import org.royjacobs.lazybot.api.domain.RoomMessage;
 import org.royjacobs.lazybot.api.plugins.Plugin;
-import org.royjacobs.lazybot.api.plugins.PluginMessageHandlingResult;
 import org.royjacobs.lazybot.bot.CommandDispatcher;
 
 import java.util.*;
 
-import static org.royjacobs.lazybot.api.plugins.PluginMessageHandlingResult.SUCCESS;
-
 public class TestCommandDispatcher implements CommandDispatcher {
-    private Map<String, List<Command>> dispatchedCommands = new HashMap<>();
+    private Map<String, List<RoomMessage>> dispatchedMessages = new HashMap<>();
 
     @Override
-    public PluginMessageHandlingResult dispatch(final String roomId, Set<Plugin> plugins, Command command) {
-        final List<Command> list = dispatchedCommands.getOrDefault(roomId, new ArrayList<>());
-        list.add(command);
-        dispatchedCommands.put(roomId, list);
-        return SUCCESS;
+    public void dispatch(final String roomId, Set<Plugin> plugins, RoomMessage message) {
+        final List<RoomMessage> list = dispatchedMessages.getOrDefault(roomId, new ArrayList<>());
+        list.add(message);
+        dispatchedMessages.put(roomId, list);
     }
 
-    public Map<String, List<Command>> getDispatchedCommands() {
-        return dispatchedCommands;
+    public Map<String, List<RoomMessage>> getDispatchedMessages() {
+        return dispatchedMessages;
     }
 }

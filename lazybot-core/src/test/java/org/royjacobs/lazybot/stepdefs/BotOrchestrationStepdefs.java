@@ -5,7 +5,6 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import lombok.Data;
-import org.royjacobs.lazybot.api.domain.Command;
 import org.royjacobs.lazybot.api.domain.RoomMessage;
 import org.royjacobs.lazybot.api.domain.RoomMessageItem;
 import org.royjacobs.lazybot.api.domain.RoomMessageItemData;
@@ -167,19 +166,17 @@ public class BotOrchestrationStepdefs {
     }
 
     @Data
-    private class CucumberCommand {
+    private class CucumberMessage {
         private String roomId;
-        private String command;
+        private String message;
     }
 
-    @Then("^the following commands are dispatched$")
-    public void theFollowingCommandsAreDispatched(List<CucumberCommand> commands) {
-        for (CucumberCommand expected : commands) {
-            final List<Command> commandsForRoom = commandDispatcher.getDispatchedCommands().get(expected.getRoomId());
-            final Optional<String> actual = commandsForRoom.stream().map(Command::getCommand).findFirst();
-
-            assertThat(actual.isPresent(), is(true));
-            assertThat(actual.get(), is(expected.getCommand()));
+    @Then("^the following messages are dispatched$")
+    public void theFollowingMessagesAreDispatched(List<CucumberMessage> commands) {
+        for (CucumberMessage expected : commands) {
+            final List<RoomMessage> messagesForRoom = commandDispatcher.getDispatchedMessages().get(expected.getRoomId());
+            final String actual = messagesForRoom.get(0).getItem().getMessage().getMessage();
+            assertThat(actual, is(expected.getMessage()));
         }
     }
 

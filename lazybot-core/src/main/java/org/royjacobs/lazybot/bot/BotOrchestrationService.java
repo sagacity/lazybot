@@ -1,13 +1,9 @@
 package org.royjacobs.lazybot.bot;
 
-import com.google.common.base.CharMatcher;
-import com.google.common.base.Splitter;
 import lombok.extern.slf4j.Slf4j;
-import org.royjacobs.lazybot.api.domain.Command;
 import org.royjacobs.lazybot.api.domain.RoomMessage;
 import org.royjacobs.lazybot.api.plugins.Plugin;
 import org.royjacobs.lazybot.api.plugins.PluginContext;
-import org.royjacobs.lazybot.api.plugins.PluginMessageHandlingResult;
 import org.royjacobs.lazybot.api.store.Store;
 import org.royjacobs.lazybot.hipchat.installations.Installation;
 import org.royjacobs.lazybot.hipchat.installations.InstallationContext;
@@ -19,7 +15,10 @@ import ratpack.service.StopEvent;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -118,26 +117,7 @@ public class BotOrchestrationService implements Service {
     public void onRoomMessage(final RoomMessage message) {
         getActiveInstallationByOauthId(message.getOauthId()).ifPresent(installation -> {
             final InstallationContext context = getContext(installation);
-
-            final List<String> cmdLine = Splitter.on(CharMatcher.WHITESPACE)
-                    .trimResults()
-                    .omitEmptyStrings()
-                    .splitToList(message.getItem().getMessage().getMessage());
-            if (cmdLine.isEmpty()) return;
-            if (!cmdLine.get(0).equalsIgnoreCase("/lazybot")) return;
-
-            final Command command = Command.builder()
-                    .originalMessage(message)
-                    .command(cmdLine.size() > 1 ? cmdLine.get(1) : "help")
-                    .args(cmdLine.size() > 2 ? cmdLine.subList(2, cmdLine.size()) : Collections.emptyList())
-                    .build();
-
-            final PluginMessageHandlingResult result = commandDispatcher.dispatch(installation.getRoomId(), context.getPlugins().stream().map(InstalledPlugin::getPlugin).collect(Collectors.toSet()), command);
-            switch (result) {
-                case BAD_REQUEST:
-                case FAILURE:
-                    log.error("Could not handle message (result: " + result + "): {}", message);
-            }
+            commandDispatcher.dispatch(installation.getRoomId(), context.getPlugins().stream().map(InstalledPlugin::getPlugin).collect(Collectors.toSet()), message);
         });
     }
 
