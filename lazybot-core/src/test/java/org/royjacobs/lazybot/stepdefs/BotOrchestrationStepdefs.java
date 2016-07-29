@@ -1,5 +1,6 @@
 package org.royjacobs.lazybot.stepdefs;
 
+import com.google.common.collect.ImmutableMap;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -24,7 +25,7 @@ import ratpack.http.Request;
 import ratpack.registry.Registry;
 import ratpack.service.StartEvent;
 import ratpack.service.StopEvent;
-import ratpack.test.embed.EmbeddedApp;
+import ratpack.test.handling.RequestFixture;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -77,13 +78,11 @@ public class BotOrchestrationStepdefs {
     @Given("^the following \"installed information\" coming in from HipChat$")
     public void theFollowingInstalledInformationComingInFromHipChat(List<InstalledInformation> installedInformations) throws Exception {
         for (InstalledInformation installedInformation : installedInformations) {
-            EmbeddedApp.fromHandlers(chain -> chain
-                    .register(r -> r.add(service))
-                    .post(new InstallationHandler())
-            )
-                    .test(client -> client.request(r -> r
-                            .body(b -> b.type("application/json").text(JacksonUtils.serialize(installedInformation)))
-                            .post()));
+            RequestFixture.requestFixture()
+                    .registry(r -> r.add(service))
+                    .body(JacksonUtils.serialize(installedInformation), "application/json")
+                    .method("POST")
+                    .handle(new InstallationHandler());
         }
     }
 
@@ -100,11 +99,11 @@ public class BotOrchestrationStepdefs {
 
     @When("^there is an unregistration for oauthId (\\S+) coming in from HipChat$")
     public void thereIsAnUnregistrationForOauthIdComingInFromHipChat(String oauthId) throws Exception {
-        EmbeddedApp.fromHandlers(chain -> chain
-                .register(r -> r.add(service))
-                .delete(":oauthid", new InstallationHandler())
-        )
-                .test(client -> client.delete(oauthId));
+        RequestFixture.requestFixture()
+                .registry(r -> r.add(service))
+                .pathBinding(ImmutableMap.of("oauthid", oauthId))
+                .method("DELETE")
+                .handle(new InstallationHandler());
     }
 
     @And("^plugin \"foo\" is broken$")
@@ -140,18 +139,17 @@ public class BotOrchestrationStepdefs {
             roomMessageItem.setMessage(roomMessageItemData);
             roomMessage.setItem(roomMessageItem);
 
-            EmbeddedApp.fromHandlers(chain -> chain
-                    .register(r -> r.add(service))
-                    .register(r -> r.add(new HipChatRequestValidator() {
+            RequestFixture.requestFixture()
+                    .registry(r -> r
+                            .add(service)
+                            .add(new HipChatRequestValidator() {
                         @Override
                         public void validate(Request request, String oauthSecret) {
                         }
                     }))
-                    .post(new RoomMessageHandler())
-            )
-                    .test(client -> client.request(r -> r
-                            .body(b -> b.type("application/json").text(JacksonUtils.serialize(roomMessage)))
-                            .post()));
+                    .method("POST")
+                    .body(JacksonUtils.serialize(roomMessage), "application/json")
+                    .handle(new RoomMessageHandler());
         }
     }
 
