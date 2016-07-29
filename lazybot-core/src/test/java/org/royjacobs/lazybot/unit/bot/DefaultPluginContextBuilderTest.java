@@ -5,7 +5,9 @@ import org.royjacobs.lazybot.api.plugins.PluginContext;
 import org.royjacobs.lazybot.bot.DefaultPluginContextBuilder;
 import org.royjacobs.lazybot.config.PluginConfig;
 import org.royjacobs.lazybot.data.*;
-import org.royjacobs.lazybot.hipchat.installations.Installation;
+import org.royjacobs.lazybot.api.domain.Installation;
+import org.royjacobs.lazybot.testing.TestRoomApi;
+import org.royjacobs.lazybot.testing.TestStoreFactory;
 
 import java.util.HashMap;
 import java.util.Map;

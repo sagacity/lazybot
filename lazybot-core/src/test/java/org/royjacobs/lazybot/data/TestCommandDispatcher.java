@@ -2,7 +2,7 @@ package org.royjacobs.lazybot.data;
 
 import org.royjacobs.lazybot.api.domain.RoomMessage;
 import org.royjacobs.lazybot.api.plugins.Plugin;
-import org.royjacobs.lazybot.bot.CommandDispatcher;
+import org.royjacobs.lazybot.api.bot.CommandDispatcher;
 
 import java.util.*;
 

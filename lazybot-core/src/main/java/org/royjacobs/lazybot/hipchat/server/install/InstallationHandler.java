@@ -2,7 +2,7 @@ package org.royjacobs.lazybot.hipchat.server.install;
 
 import lombok.extern.slf4j.Slf4j;
 import org.royjacobs.lazybot.bot.BotOrchestrationService;
-import org.royjacobs.lazybot.hipchat.installations.Installation;
+import org.royjacobs.lazybot.api.domain.Installation;
 import org.royjacobs.lazybot.hipchat.server.install.dto.InstalledInformation;
 import ratpack.handling.Context;
 import ratpack.handling.InjectionHandler;

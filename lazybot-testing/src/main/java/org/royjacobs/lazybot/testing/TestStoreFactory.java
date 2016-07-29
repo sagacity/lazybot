@@ -1,7 +1,7 @@
-package org.royjacobs.lazybot.data;
+package org.royjacobs.lazybot.testing;
 
 import org.royjacobs.lazybot.api.store.Store;
-import org.royjacobs.lazybot.store.StoreFactory;
+import org.royjacobs.lazybot.api.store.StoreFactory;
 
 import java.util.HashMap;
 import java.util.Map;

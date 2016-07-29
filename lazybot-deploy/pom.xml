@@ -24,6 +24,10 @@
             <groupId>org.royjacobs.lazybot</groupId>
             <artifactId>lazybot-plugin-weather</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.royjacobs.lazybot</groupId>
+            <artifactId>lazybot-plugin-template</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

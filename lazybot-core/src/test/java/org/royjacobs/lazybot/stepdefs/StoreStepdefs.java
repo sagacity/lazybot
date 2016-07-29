@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import org.royjacobs.lazybot.api.store.Store;
 import org.royjacobs.lazybot.config.DatabaseConfig;
 import org.royjacobs.lazybot.store.PersistentStoreFactory;
-import org.royjacobs.lazybot.store.StoreFactory;
+import org.royjacobs.lazybot.api.store.StoreFactory;
 
 import java.util.Optional;
 

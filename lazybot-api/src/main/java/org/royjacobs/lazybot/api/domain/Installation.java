@@ -1,4 +1,4 @@
-package org.royjacobs.lazybot.hipchat.installations;
+package org.royjacobs.lazybot.api.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;

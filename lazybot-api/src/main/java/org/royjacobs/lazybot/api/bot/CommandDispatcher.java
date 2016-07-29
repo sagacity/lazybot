@@ -1,4 +1,4 @@
-package org.royjacobs.lazybot.bot;
+package org.royjacobs.lazybot.api.bot;
 
 import org.royjacobs.lazybot.api.domain.RoomMessage;
 import org.royjacobs.lazybot.api.plugins.Plugin;

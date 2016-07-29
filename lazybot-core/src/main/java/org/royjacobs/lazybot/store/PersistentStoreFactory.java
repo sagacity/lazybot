@@ -6,6 +6,7 @@ import com.google.common.cache.CacheBuilder;
 import lombok.extern.slf4j.Slf4j;
 import net.openhft.chronicle.map.ChronicleMap;
 import org.royjacobs.lazybot.api.store.Store;
+import org.royjacobs.lazybot.api.store.StoreFactory;
 import org.royjacobs.lazybot.config.DatabaseConfig;
 
 import javax.inject.Inject;

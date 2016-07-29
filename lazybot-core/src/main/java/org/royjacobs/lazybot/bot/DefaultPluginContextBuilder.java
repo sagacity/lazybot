@@ -1,12 +1,13 @@
 package org.royjacobs.lazybot.bot;
 
 import lombok.extern.slf4j.Slf4j;
+import org.royjacobs.lazybot.api.bot.PluginContextBuilder;
 import org.royjacobs.lazybot.api.hipchat.RoomApi;
 import org.royjacobs.lazybot.api.plugins.*;
 import org.royjacobs.lazybot.config.PluginConfig;
 import org.royjacobs.lazybot.hipchat.client.RoomApiFactory;
-import org.royjacobs.lazybot.hipchat.installations.Installation;
-import org.royjacobs.lazybot.store.StoreFactory;
+import org.royjacobs.lazybot.api.domain.Installation;
+import org.royjacobs.lazybot.api.store.StoreFactory;
 import org.royjacobs.lazybot.utils.JacksonUtils;
 
 import javax.inject.Inject;

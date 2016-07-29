@@ -1,4 +1,4 @@
-package org.royjacobs.lazybot.data;
+package org.royjacobs.lazybot.testing;
 
 import lombok.Getter;
 import org.royjacobs.lazybot.api.store.Store;

@@ -7,7 +7,7 @@ import okhttp3.*;
 import org.royjacobs.lazybot.api.domain.Notification;
 import org.royjacobs.lazybot.api.hipchat.RoomApi;
 import org.royjacobs.lazybot.config.HipChatConfig;
-import org.royjacobs.lazybot.hipchat.installations.Installation;
+import org.royjacobs.lazybot.api.domain.Installation;
 import org.royjacobs.lazybot.utils.JacksonUtils;
 
 import javax.inject.Inject;
