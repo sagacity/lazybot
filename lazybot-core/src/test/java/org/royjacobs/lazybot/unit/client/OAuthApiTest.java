@@ -7,6 +7,7 @@ import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Test;
 import org.royjacobs.lazybot.config.HipChatConfig;
+import org.royjacobs.lazybot.hipchat.client.LoggingInterceptor;
 import org.royjacobs.lazybot.hipchat.client.OAuthApiHttp;
 import org.royjacobs.lazybot.hipchat.client.dto.RequestTokenResponse;
 import org.royjacobs.lazybot.utils.JacksonUtils;
@@ -35,7 +36,7 @@ public class OAuthApiTest {
         });
         server.start();
 
-        final OkHttpClient client = new OkHttpClient.Builder().build();
+        final OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new LoggingInterceptor()).build();
         final HipChatConfig hipChatConfig = new HipChatConfig();
         hipChatConfig.setHipChatApiUrl(server.url("").toString());
         hipChatConfig.setScopes(new HashSet<>(Arrays.asList("scope1", "scope2")));

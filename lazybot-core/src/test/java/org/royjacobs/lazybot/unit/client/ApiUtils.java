@@ -4,6 +4,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockWebServer;
 import org.jetbrains.annotations.NotNull;
 import org.royjacobs.lazybot.config.HipChatConfig;
+import org.royjacobs.lazybot.hipchat.client.LoggingInterceptor;
 import org.royjacobs.lazybot.hipchat.client.OAuthApi;
 import org.royjacobs.lazybot.hipchat.client.RoomApiHttp;
 import org.royjacobs.lazybot.hipchat.client.dto.RequestTokenResponse;
@@ -20,7 +21,7 @@ class ApiUtils {
 
     @NotNull
     static RoomApiHttp getRoomApi(MockWebServer server, OAuthApi oAuthApi) {
-        final OkHttpClient client = new OkHttpClient.Builder().build();
+        final OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new LoggingInterceptor()).build();
         final HipChatConfig hipChatConfig = new HipChatConfig();
         hipChatConfig.setHipChatApiUrl(server.url("").toString());
         return new RoomApiHttp(client, hipChatConfig, oAuthApi, installation);
