@@ -1,30 +1,22 @@
 package org.royjacobs.lazybot.hipchat.server.glances;
 
 import org.royjacobs.lazybot.api.domain.GlanceData;
+import org.royjacobs.lazybot.bot.BotOrchestrationService;
+import org.royjacobs.lazybot.hipchat.server.validator.HipChatRequestValidator;
 import ratpack.handling.Context;
-import ratpack.handling.Handler;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import ratpack.handling.InjectionHandler;
 
 import java.util.Optional;
 
 import static ratpack.jackson.Jackson.json;
 
-@Singleton
-public class GetGlancesHandler implements Handler {
-    private final GlanceManager glanceManager;
+public class GetGlancesHandler extends InjectionHandler {
+    public void handle(Context ctx, final BotOrchestrationService botOrchestrationService, final HipChatRequestValidator requestValidator, GlanceManager glanceManager) throws Exception {
+        final String oauthId = ctx.getPathTokens().get("oauthid");
+        botOrchestrationService.getActiveInstallationByOauthId(oauthId).ifPresent(installation -> requestValidator.validate(ctx.getRequest(), installation.getOauthSecret()));
 
-    @Inject
-    public GetGlancesHandler(GlanceManager glanceManager) {
-        this.glanceManager = glanceManager;
-    }
-
-    @Override
-    public void handle(Context ctx) throws Exception {
-        final String roomId = ctx.getPathTokens().get("roomid");
         final String key = ctx.getPathTokens().get("key");
-        final Optional<GlanceData> maybeGlance = glanceManager.get(roomId, key);
+        final Optional<GlanceData> maybeGlance = glanceManager.get(oauthId, key);
 
         if (maybeGlance.isPresent()) {
             ctx

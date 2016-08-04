@@ -45,7 +45,7 @@ public class App {
                         .post(PATH_INSTALL, InstallationHandler.class)
                         .delete(PATH_INSTALL + "/:oauthid", InstallationHandler.class)
                         .post(PATH_WEBHOOK_ROOM_MESSAGE, RoomMessageHandler.class)
-                        .get(PATH_GLANCES + "/:roomid/:key", GetGlancesHandler.class)
+                        .get(PATH_GLANCES + "/:oauthid/:key", GetGlancesHandler.class)
                 )
         );
     }

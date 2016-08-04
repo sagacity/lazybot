@@ -15,16 +15,16 @@ import java.util.Optional;
 public class GlanceManager {
     private final Map<String, GlanceData> glances = new HashMap<>();
 
-    public void registerGlance(String roomId, String key, GlanceData data) {
-        glances.put(makeKey(roomId, key), data);
+    public void registerGlance(String oauthId, String key, GlanceData data) {
+        glances.put(makeKey(oauthId, key), data);
     }
 
-    public void unregisterGlance(String roomId, String key) {
-        glances.remove(makeKey(roomId, key));
+    public void unregisterGlance(String oauthId, String key) {
+        glances.remove(makeKey(oauthId, key));
     }
 
-    public Optional<GlanceData> get(String roomId, String key) {
-        return Optional.ofNullable(glances.get(makeKey(roomId, key)));
+    public Optional<GlanceData> get(String oauthId, String key) {
+        return Optional.ofNullable(glances.get(makeKey(oauthId, key)));
     }
 
     public GlanceContent toContent(GlanceData glanceData) {
@@ -43,7 +43,7 @@ public class GlanceManager {
                 .build();
     }
 
-    private String makeKey(String roomId, String key) {
-        return roomId + "#" + key;
+    private String makeKey(String oauthId, String key) {
+        return oauthId + "#" + key;
     }
 }

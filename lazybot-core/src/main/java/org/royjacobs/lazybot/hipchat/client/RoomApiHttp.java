@@ -84,11 +84,11 @@ public class RoomApiHttp implements RoomApi {
     public Glance registerGlance(final String glanceKey, final Icon icon, final GlanceData initialData) {
         final String glancesUrl = serverConfig.getPublicAddress().resolve("/" + Paths.PATH_GLANCES).toString();
 
-        glanceManager.registerGlance(installation.getRoomId(), glanceKey, initialData);
+        glanceManager.registerGlance(installation.getOauthId(), glanceKey, initialData);
 
         final CreateGlanceRequest request = CreateGlanceRequest.builder()
                 .name(new GlanceName("LazyBot"))
-                .queryUrl(glancesUrl + "/" + installation.getRoomId() + "/" + glanceKey)
+                .queryUrl(glancesUrl + "/" + installation.getOauthId() + "/" + glanceKey)
                 .key(glanceKey)
                 .icon(icon)
                 .build();
@@ -119,7 +119,7 @@ public class RoomApiHttp implements RoomApi {
 
     @Override
     public void unregisterGlance(Glance glance) {
-        glanceManager.unregisterGlance(installation.getRoomId(), glance.getKey());
+        glanceManager.unregisterGlance(installation.getOauthId(), glance.getKey());
     }
 
     private void performRequest(Request.Builder request) {
