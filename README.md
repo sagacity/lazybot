@@ -14,11 +14,11 @@ To quickly start playing with a bot, I suggest you use [ngrok](https://ngrok.com
    ```
    ngrok http 5050
    ```
-2. Edit `dist/example-config.json` and set the publicAddress to whatever ngrok has provided you with.
+2. Edit `example-bot/example-config.json` and set the publicAddress to whatever ngrok has provided you with.
 
 3. Build and run the bot!
    ```
-   cd dist
+   cd example-bot
    ./run.sh
    ```
 
@@ -26,7 +26,7 @@ To quickly start playing with a bot, I suggest you use [ngrok](https://ngrok.com
 
 5. Enter the following url:
    ```
-   https://<address of your server>/capabilities
+   https://<address of your server>
    ```
 
 6. Profit!
