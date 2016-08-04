@@ -5,7 +5,6 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.royjacobs.lazybot.api.domain.Notification;
 import org.royjacobs.lazybot.hipchat.client.RoomApiHttp;
 
 import java.io.IOException;
@@ -26,7 +25,7 @@ public class RefreshTokenTest {
         server.enqueue(new MockResponse().setResponseCode(200));
         server.start();
         final RoomApiHttp http = getRoomApi(server, ((oauthId, oauthSecret) -> getValidOAuthToken()));
-        http.sendNotification(new Notification("bot", "text", "hello"));
+        http.sendMessage("hello", null);
     }
 
     @Test
@@ -45,7 +44,7 @@ public class RefreshTokenTest {
                     return getValidOAuthToken();
             }
         }));
-        http.sendNotification(new Notification("bot", "text", "hello"));
+        http.sendMessage("hello", null);
     }
 
     @Test
@@ -60,6 +59,6 @@ public class RefreshTokenTest {
 
         exception.expect(RuntimeException.class);
         final RoomApiHttp http = getRoomApi(server, ((oauthId, oauthSecret) -> getValidOAuthToken()));
-        http.sendNotification(new Notification("bot", "text", "hello"));
+        http.sendMessage("hello", null);
     }
 }

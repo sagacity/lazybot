@@ -2,7 +2,6 @@ package org.royjacobs.lazybot.plugin.template;
 
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.royjacobs.lazybot.api.domain.Command;
-import org.royjacobs.lazybot.api.domain.Notification;
 import org.royjacobs.lazybot.api.plugins.*;
 
 import java.util.Objects;
@@ -31,12 +30,12 @@ public class TemplatePlugin implements Plugin {
 
     public PluginMessageHandlingResult onCommand(Command command) {
         if (command.getCommand().equalsIgnoreCase("template")) {
-            if (Objects.equals(command.getArgs().get(0), "say")) {
+            if (Objects.equals(command.getArgs().get(0), "topic")) {
                 final String template = command.getArgs().subList(1, command.getArgs().size()).stream().collect(Collectors.joining(" "));
 
                 final StrSubstitutor substitutor = new StrSubstitutor(variables.getVariables());
                 final String replaced = substitutor.replace(template);
-                context.getRoomApi().sendNotification(new Notification("bot", "text", replaced));
+                context.getRoomApi().setTopic(replaced);
 
                 return SUCCESS;
             }

@@ -21,7 +21,7 @@ public class RoomApiTest {
     private Notification receivedNotification;
 
     @Test
-    public void sendNotification() throws IOException {
+    public void sendMessage() throws IOException {
         server.setDispatcher(new Dispatcher() {
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
@@ -33,8 +33,7 @@ public class RoomApiTest {
         server.start();
 
         final RoomApiHttp http = getRoomApi(server, (oauthId, oauthSecret) -> getValidOAuthToken());
-        final Notification notification = new Notification("bot", "text", "hello");
-        http.sendNotification(notification);
-        assertThat(receivedNotification, is(notification));
+        http.sendMessage("hello", null);
+        assertThat(receivedNotification, is(new Notification("hello", null)));
     }
 }

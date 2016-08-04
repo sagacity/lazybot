@@ -6,7 +6,6 @@ import lombok.Value;
 @Value
 @AllArgsConstructor
 public class Notification {
-    private String from;
-    private String message_format;
     private String message;
+    private Color color;
 }

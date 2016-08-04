@@ -1,10 +1,7 @@
 package org.royjacobs.lazybot.testing;
 
 import lombok.Getter;
-import org.royjacobs.lazybot.api.domain.Glance;
-import org.royjacobs.lazybot.api.domain.GlanceData;
-import org.royjacobs.lazybot.api.domain.Icon;
-import org.royjacobs.lazybot.api.domain.Notification;
+import org.royjacobs.lazybot.api.domain.*;
 import org.royjacobs.lazybot.api.hipchat.RoomApi;
 
 import java.util.ArrayList;
@@ -12,14 +9,14 @@ import java.util.List;
 
 public class TestRoomApi implements RoomApi {
     @Getter
-    private final List<Notification> notifications = new ArrayList<>();
+    private final List<String> notifications = new ArrayList<>();
 
     @Getter
     private final List<String> topics = new ArrayList<>();
 
     @Override
-    public void sendNotification(Notification notification) {
-        notifications.add(notification);
+    public void sendMessage(String message, Color color) {
+        notifications.add(message);
     }
 
     @Override
@@ -36,7 +33,7 @@ public class TestRoomApi implements RoomApi {
     public void unregisterGlance(Glance glance) {
     }
 
-    public Notification getLastNotification() {
+    public String getLastNotification() {
         return notifications.get(notifications.size() - 1);
     }
 }

@@ -44,11 +44,15 @@ public class RoomApiHttp implements RoomApi {
         this.installation = installation;
     }
 
-    @Override
-    public void sendNotification(final Notification notification) {
+    private void sendNotification(final Notification notification) {
         performRequest(new Request.Builder()
                 .url(hipChatConfig.getRoomUrl(installation.getRoomId()) + "/notification")
                 .post(RequestBody.create(MediaType.parse("application/json"), JacksonUtils.serialize(notification))));
+    }
+
+    @Override
+    public void sendMessage(final String message, final Color color) {
+        sendNotification(new Notification(message, color));
     }
 
     @Data

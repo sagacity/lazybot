@@ -1,7 +1,6 @@
 package org.royjacobs.lazybot.weather;
 
 import org.royjacobs.lazybot.api.domain.Command;
-import org.royjacobs.lazybot.api.domain.Notification;
 import org.royjacobs.lazybot.api.plugins.Plugin;
 import org.royjacobs.lazybot.api.plugins.PluginContext;
 import org.royjacobs.lazybot.api.plugins.PluginDescriptor;
@@ -34,7 +33,7 @@ public class WeatherPlugin implements Plugin {
     public PluginMessageHandlingResult onCommand(Command command) {
         if (command.getCommand().equalsIgnoreCase("weather")) {
             final String forecast = weatherService.getForecast(configData.city, configData.country);
-            context.getRoomApi().sendNotification(new Notification("weather", "text", forecast));
+            context.getRoomApi().sendMessage(forecast, null);
             return PluginMessageHandlingResult.SUCCESS;
         }
         return PluginMessageHandlingResult.NOT_INTENDED_FOR_THIS_PLUGIN;
