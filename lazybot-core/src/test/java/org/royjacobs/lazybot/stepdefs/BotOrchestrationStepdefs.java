@@ -45,7 +45,7 @@ public class BotOrchestrationStepdefs {
 
     private BotOrchestrationService createService() {
         return new BotOrchestrationService(
-                pluginContextBuilder,
+                (variableCombiner) -> pluginContextBuilder,
                 store,
                 pluginProvider,
                 commandDispatcher

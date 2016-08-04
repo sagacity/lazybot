@@ -3,6 +3,7 @@ package org.royjacobs.lazybot.unit.bot;
 import org.junit.Test;
 import org.royjacobs.lazybot.api.plugins.PluginContext;
 import org.royjacobs.lazybot.bot.DefaultPluginContextBuilder;
+import org.royjacobs.lazybot.bot.VariableCombiner;
 import org.royjacobs.lazybot.config.PluginConfig;
 import org.royjacobs.lazybot.data.*;
 import org.royjacobs.lazybot.api.domain.Installation;
@@ -61,6 +62,6 @@ public class DefaultPluginContextBuilderTest {
     }
 
     private DefaultPluginContextBuilder getBuilder() {
-        return new DefaultPluginContextBuilder(pluginConfig, installation -> roomApi, storeFactory);
+        return new DefaultPluginContextBuilder(pluginConfig, installation -> roomApi, storeFactory, new VariableCombiner());
     }
 }

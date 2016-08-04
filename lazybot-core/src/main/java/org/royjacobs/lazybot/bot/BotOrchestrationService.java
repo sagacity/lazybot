@@ -6,6 +6,7 @@ import org.royjacobs.lazybot.api.bot.PluginContextBuilder;
 import org.royjacobs.lazybot.api.domain.RoomMessage;
 import org.royjacobs.lazybot.api.plugins.Plugin;
 import org.royjacobs.lazybot.api.plugins.PluginContext;
+import org.royjacobs.lazybot.api.plugins.PublicVariables;
 import org.royjacobs.lazybot.api.store.Store;
 import org.royjacobs.lazybot.api.domain.Installation;
 import org.royjacobs.lazybot.hipchat.installations.InstallationContext;
@@ -13,6 +14,7 @@ import org.royjacobs.lazybot.hipchat.installations.InstalledPlugin;
 import ratpack.service.Service;
 import ratpack.service.StartEvent;
 import ratpack.service.StopEvent;
+import rx.Observable;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -26,7 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Singleton
 public class BotOrchestrationService implements Service {
-    private final PluginContextBuilder pluginContextBuilder;
+    private final PluginContextBuilderFactory pluginContextBuilderFactory;
     private final Provider<Set<Plugin>> pluginProvider;
     private final CommandDispatcher commandDispatcher;
 
@@ -35,12 +37,12 @@ public class BotOrchestrationService implements Service {
 
     @Inject
     public BotOrchestrationService(
-            final PluginContextBuilder pluginContextBuilder,
+            final PluginContextBuilderFactory pluginContextBuilderFactory,
             final Store<Installation> storedInstallations,
             final Provider<Set<Plugin>> pluginProvider,
             final CommandDispatcher commandDispatcher
             ) {
-        this.pluginContextBuilder = pluginContextBuilder;
+        this.pluginContextBuilderFactory = pluginContextBuilderFactory;
         this.storedInstallations = storedInstallations;
         this.pluginProvider = pluginProvider;
         this.commandDispatcher = commandDispatcher;
@@ -65,11 +67,18 @@ public class BotOrchestrationService implements Service {
 
         log.info("Starting installation: " + installation);
 
+        final VariableCombiner variableCombiner = new VariableCombiner();
+        final PluginContextBuilder pluginContextBuilder = pluginContextBuilderFactory.create(variableCombiner);
+
         final InstallationContext.InstallationContextBuilder builder = InstallationContext
-                .builder();
+                .builder()
+                .variableCombiner(variableCombiner);
 
         pluginProvider.get().forEach(plugin -> {
             try {
+                final Observable<PublicVariables> pv = plugin.getDescriptor().getPublicVariables();
+                if (pv != null) variableCombiner.register(pv);
+
                 final PluginContext pluginContext = pluginContextBuilder.buildContext(plugin, installation);
                 plugin.onStart(pluginContext);
 
@@ -83,6 +92,8 @@ public class BotOrchestrationService implements Service {
             }
         });
 
+        variableCombiner.publishCurrentVariables();
+
         log.info("Installation complete");
         activeInstallations.put(installation, builder.build());
     }
@@ -93,6 +104,8 @@ public class BotOrchestrationService implements Service {
                 // Notify plugin
                 plugin.getPlugin().onStop(false);
             }
+
+            context.getVariableCombiner().unregisterAll();
         }
 
         activeInstallations.clear();

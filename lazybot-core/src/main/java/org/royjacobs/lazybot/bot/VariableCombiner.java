@@ -24,7 +24,7 @@ public class VariableCombiner {
             current.getVariables().put(newKv.getKey(), newKv.getValue());
         }
 
-        currentObservable.onNext(current);
+        publishCurrentVariables();
     }
 
     public void unregisterAll() {
@@ -33,5 +33,9 @@ public class VariableCombiner {
 
     public Observable<PublicVariables> getCurrentVariables() {
         return currentObservable;
+    }
+
+    public void publishCurrentVariables() {
+        currentObservable.onNext(current);
     }
 }

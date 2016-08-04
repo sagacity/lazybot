@@ -1,15 +1,15 @@
 package org.royjacobs.lazybot.bot;
 
+import com.google.inject.assistedinject.Assisted;
 import lombok.extern.slf4j.Slf4j;
 import org.royjacobs.lazybot.api.bot.PluginContextBuilder;
+import org.royjacobs.lazybot.api.domain.Installation;
 import org.royjacobs.lazybot.api.hipchat.RoomApi;
 import org.royjacobs.lazybot.api.plugins.*;
+import org.royjacobs.lazybot.api.store.StoreFactory;
 import org.royjacobs.lazybot.config.PluginConfig;
 import org.royjacobs.lazybot.hipchat.client.RoomApiFactory;
-import org.royjacobs.lazybot.api.domain.Installation;
-import org.royjacobs.lazybot.api.store.StoreFactory;
 import org.royjacobs.lazybot.utils.JacksonUtils;
-import rx.subjects.PublishSubject;
 
 import javax.inject.Inject;
 
@@ -18,16 +18,19 @@ public class DefaultPluginContextBuilder implements PluginContextBuilder {
     private final PluginConfig pluginConfig;
     private final RoomApiFactory roomApiFactory;
     private final StoreFactory storeFactory;
+    private final VariableCombiner variableCombiner;
 
     @Inject
     public DefaultPluginContextBuilder(
             PluginConfig pluginConfig,
             RoomApiFactory roomApiFactory,
-            StoreFactory storeFactory
+            StoreFactory storeFactory,
+            @Assisted VariableCombiner variableCombiner
     ) {
         this.pluginConfig = pluginConfig;
         this.roomApiFactory = roomApiFactory;
         this.storeFactory = storeFactory;
+        this.variableCombiner = variableCombiner;
     }
 
     @Override
@@ -56,7 +59,7 @@ public class DefaultPluginContextBuilder implements PluginContextBuilder {
             pluginContextBuilder.globalStore(storeFactory.get("plugindata-" + plugin.getDescriptor().getKey() + "-global", (Class<PluginGlobalData>)plugin.getDescriptor().getGlobalDataClass()));
         }
 
-        pluginContextBuilder.publicVariables(PublishSubject.create()); // hack
+        pluginContextBuilder.publicVariables(variableCombiner.getCurrentVariables());
 
         return pluginContextBuilder.build();
     }
