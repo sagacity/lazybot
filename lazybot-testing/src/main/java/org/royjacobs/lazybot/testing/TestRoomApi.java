@@ -1,6 +1,9 @@
 package org.royjacobs.lazybot.testing;
 
 import lombok.Getter;
+import org.royjacobs.lazybot.api.domain.Glance;
+import org.royjacobs.lazybot.api.domain.GlanceData;
+import org.royjacobs.lazybot.api.domain.Icon;
 import org.royjacobs.lazybot.api.domain.Notification;
 import org.royjacobs.lazybot.api.hipchat.RoomApi;
 
@@ -22,6 +25,15 @@ public class TestRoomApi implements RoomApi {
     @Override
     public void setTopic(String topic) {
         topics.add(topic);
+    }
+
+    @Override
+    public Glance registerGlance(String glanceKey, Icon icon, GlanceData initialData) {
+        return null;
+    }
+
+    @Override
+    public void unregisterGlance(Glance glance) {
     }
 
     public Notification getLastNotification() {

@@ -104,7 +104,7 @@ public class BotOrchestrationService implements Service {
         if (context != null) { // not stopped yet
             for (InstalledPlugin plugin : context.getPlugins()) {
                 // Remove context and clear any data
-                plugin.getContext().getRoomStore().clearAll();
+                if (plugin.getContext().getRoomStore() != null) plugin.getContext().getRoomStore().clearAll();
 
                 // Notify plugin
                 plugin.getPlugin().onStop(true);

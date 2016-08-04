@@ -1,15 +1,16 @@
 package org.royjacobs.lazybot;
 
+import com.google.common.io.Resources;
+import lombok.extern.slf4j.Slf4j;
 import org.royjacobs.lazybot.bot.BotOrchestrationService;
 import org.royjacobs.lazybot.config.DatabaseConfig;
 import org.royjacobs.lazybot.config.HipChatConfig;
 import org.royjacobs.lazybot.config.PluginConfig;
 import org.royjacobs.lazybot.config.modules.*;
 import org.royjacobs.lazybot.hipchat.server.capabilities.GetCapabilitiesHandler;
+import org.royjacobs.lazybot.hipchat.server.glances.GetGlancesHandler;
 import org.royjacobs.lazybot.hipchat.server.install.InstallationHandler;
 import org.royjacobs.lazybot.hipchat.server.webhooks.RoomMessageHandler;
-import com.google.common.io.Resources;
-import lombok.extern.slf4j.Slf4j;
 import ratpack.func.Action;
 import ratpack.func.Function;
 import ratpack.guice.Guice;
@@ -21,9 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.royjacobs.lazybot.hipchat.server.Paths.PATH_CAPABILITIES;
-import static org.royjacobs.lazybot.hipchat.server.Paths.PATH_INSTALL;
-import static org.royjacobs.lazybot.hipchat.server.Paths.PATH_WEBHOOK_ROOM_MESSAGE;
+import static org.royjacobs.lazybot.hipchat.server.Paths.*;
 
 @Slf4j
 public class App {
@@ -46,6 +45,7 @@ public class App {
                         .post(PATH_INSTALL, InstallationHandler.class)
                         .delete(PATH_INSTALL + "/:oauthid", InstallationHandler.class)
                         .post(PATH_WEBHOOK_ROOM_MESSAGE, RoomMessageHandler.class)
+                        .get(PATH_GLANCES + "/:roomid/:key", GetGlancesHandler.class)
                 )
         );
     }
