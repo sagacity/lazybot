@@ -15,11 +15,11 @@ public class TemplatePluginTest {
     @Test
     public void canTemplateMessage() {
         tester.getPublicVariables().onNext(new PublicVariables(ImmutableMap.of("foo.oof", "bar")));
-        tester.test(plugin -> plugin.onCommand(Command.of("/bot template say hello ${foo.oof} rocks")));
-        assertThat(tester.getRoomApi().getLastNotification(), is("hello bar rocks"));
+        tester.test(plugin -> plugin.onCommand(Command.of("/bot template topic hello ${foo.oof} rocks")));
+        assertThat(tester.getRoomApi().getLastTopic(), is("hello bar rocks"));
 
         tester.getPublicVariables().onNext(new PublicVariables(ImmutableMap.of("foo.oof", "boop")));
-        tester.test(plugin -> plugin.onCommand(Command.of("/bot template say hello ${foo.oof} really rocks")));
-        assertThat(tester.getRoomApi().getLastNotification(), is("hello boop really rocks"));
+        tester.test(plugin -> plugin.onCommand(Command.of("/bot template topic hello ${foo.oof} really rocks")));
+        assertThat(tester.getRoomApi().getLastTopic(), is("hello boop really rocks"));
     }
 }

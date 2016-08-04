@@ -36,4 +36,8 @@ public class TestRoomApi implements RoomApi {
     public String getLastNotification() {
         return notifications.get(notifications.size() - 1);
     }
+
+    public String getLastTopic() {
+        return topics.get(topics.size() - 1);
+    }
 }
