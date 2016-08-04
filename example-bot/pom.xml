@@ -29,6 +29,11 @@
             <artifactId>lazybot-plugin-template</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.royjacobs.lazybot</groupId>
+            <artifactId>lazybot-plugin-role</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
