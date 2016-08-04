@@ -45,6 +45,7 @@
         <module>lazybot-api</module>
         <module>lazybot-plugin-template</module>
         <module>lazybot-testing</module>
+        <module>example-bot</module>
     </modules>
 	
 	<build>
