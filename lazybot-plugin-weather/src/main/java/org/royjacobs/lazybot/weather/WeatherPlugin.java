@@ -2,7 +2,10 @@ package org.royjacobs.lazybot.weather;
 
 import org.royjacobs.lazybot.api.domain.Command;
 import org.royjacobs.lazybot.api.domain.Notification;
-import org.royjacobs.lazybot.api.plugins.*;
+import org.royjacobs.lazybot.api.plugins.Plugin;
+import org.royjacobs.lazybot.api.plugins.PluginContext;
+import org.royjacobs.lazybot.api.plugins.PluginDescriptor;
+import org.royjacobs.lazybot.api.plugins.PluginMessageHandlingResult;
 
 public class WeatherPlugin implements Plugin {
     private final WeatherService weatherService;
@@ -26,7 +29,6 @@ public class WeatherPlugin implements Plugin {
     }
 
     public void onStop(boolean unregistered) {
-
     }
 
     public PluginMessageHandlingResult onCommand(Command command) {

@@ -9,6 +9,7 @@ import org.royjacobs.lazybot.hipchat.client.RoomApiFactory;
 import org.royjacobs.lazybot.api.domain.Installation;
 import org.royjacobs.lazybot.api.store.StoreFactory;
 import org.royjacobs.lazybot.utils.JacksonUtils;
+import rx.subjects.PublishSubject;
 
 import javax.inject.Inject;
 
@@ -54,6 +55,8 @@ public class DefaultPluginContextBuilder implements PluginContextBuilder {
         if (plugin.getDescriptor().getGlobalDataClass() != null) {
             pluginContextBuilder.globalStore(storeFactory.get("plugindata-" + plugin.getDescriptor().getKey() + "-global", (Class<PluginGlobalData>)plugin.getDescriptor().getGlobalDataClass()));
         }
+
+        pluginContextBuilder.publicVariables(PublishSubject.create()); // hack
 
         return pluginContextBuilder.build();
     }

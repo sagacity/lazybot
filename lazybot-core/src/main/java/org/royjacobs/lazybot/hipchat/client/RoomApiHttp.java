@@ -2,6 +2,8 @@ package org.royjacobs.lazybot.hipchat.client;
 
 import com.google.common.base.Throwables;
 import com.google.inject.assistedinject.Assisted;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.royjacobs.lazybot.api.domain.Notification;
@@ -37,6 +39,19 @@ public class RoomApiHttp implements RoomApi {
         performRequest(new Request.Builder()
                 .url(hipChatConfig.getRoomUrl(installation.getRoomId()) + "/notification")
                 .post(RequestBody.create(MediaType.parse("application/json"), JacksonUtils.serialize(notification))));
+    }
+
+    @Data
+    @AllArgsConstructor
+    private class Topic {
+        String topic;
+    }
+
+    @Override
+    public void setTopic(final String topic) {
+        performRequest(new Request.Builder()
+                .url(hipChatConfig.getRoomUrl(installation.getRoomId()) + "/topic")
+                .put(RequestBody.create(MediaType.parse("application/json"), JacksonUtils.serialize(new Topic(topic)))));
     }
 
     private void performRequest(Request.Builder request) {

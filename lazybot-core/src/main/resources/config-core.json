@@ -9,7 +9,8 @@
     "scopes": [
       "send_notification",
       "view_messages",
-      "view_room"
+      "view_room",
+      "admin_room"
     ]
   },
   "plugins": {

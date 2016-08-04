@@ -11,9 +11,17 @@ public class TestRoomApi implements RoomApi {
     @Getter
     private final List<Notification> notifications = new ArrayList<>();
 
+    @Getter
+    private final List<String> topics = new ArrayList<>();
+
     @Override
     public void sendNotification(Notification notification) {
         notifications.add(notification);
+    }
+
+    @Override
+    public void setTopic(String topic) {
+        topics.add(topic);
     }
 
     public Notification getLastNotification() {
