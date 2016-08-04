@@ -30,7 +30,8 @@ public class OAuthApiHttp implements OAuthApi {
                 .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"), "grant_type=client_credentials&scope=" + scope))
                 .build();
 
-        final Response response = httpClient.newCall(request).execute();
-        return JacksonUtils.deserialize(response.body().string(), RequestTokenResponse.class);
+        try (final Response response = httpClient.newCall(request).execute()) {
+            return JacksonUtils.deserialize(response.body().string(), RequestTokenResponse.class);
+        }
     }
 }

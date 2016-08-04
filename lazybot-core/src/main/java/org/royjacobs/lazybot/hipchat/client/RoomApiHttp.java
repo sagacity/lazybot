@@ -63,11 +63,12 @@ public class RoomApiHttp implements RoomApi {
                 if (token == null) token = refreshOAuthToken();
 
                 request.header("Authorization", "Bearer " + token);
-                final Response response = httpClient.newCall(request.build()).execute();
-                if (response.code() < 400) return;
+                try (final Response response = httpClient.newCall(request.build()).execute()) {
+                    if (response.code() < 400) return;
 
-                // 401 means the OAuth may be invalid, so let's refresh it
-                if (response.code() == 401) token = null;
+                    // 401 means the OAuth may be invalid, so let's refresh it
+                    if (response.code() == 401) token = null;
+                }
             } catch (Exception e) {
                 log.error("Could not perform call", e);
             }
